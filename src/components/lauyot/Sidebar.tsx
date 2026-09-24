@@ -3,6 +3,7 @@ import {
   House,
   LayoutGrid,
   LogOut,
+  Notebook,
   Package,
   ShoppingCart,
   SquareChevronLeft,
@@ -310,6 +311,48 @@ export default function Sidebar() {
                   <Star color={isActive ? "white" : "#6A717F"} size={20} />
 
                   {!sidebar && <p>Brands</p>}
+
+                  {sidebar && (
+                    <span
+                      className="
+                        absolute left-[68px] top-1/2 -translate-y-1/2
+                        z-50 whitespace-nowrap
+                        rounded-md px-3 py-2
+                        text-sm font-medium
+                        text-white
+                        bg-[#1F2937] dark:bg-[#374151]
+                        shadow-lg
+                        opacity-0 invisible
+                        group-hover:opacity-100
+                        group-hover:visible
+                        translate-x-[-5px]
+                        group-hover:translate-x-0
+                        transition-all duration-200
+                        pointer-events-none
+                      "
+                    >
+                      Brands
+                    </span>
+                  )}
+                </>
+              )}
+            </NavLink>
+            <NavLink
+              to="banners"
+              className={({ isActive }) =>
+                `group relative rounded-md flex items-center gap-2 px-4 py-2.25 transition-all duration-300 
+                ${
+                  isActive
+                    ? "bg-[#4EA674] text-white"
+                    : "text-[#6A717F] hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <Notebook color={isActive ? "white" : "#6A717F"} size={20} />
+
+                  {!sidebar && <p>Banners</p>}
 
                   {sidebar && (
                     <span

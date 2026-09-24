@@ -241,7 +241,34 @@ body {
     transform: translateY(0) scale(1);
   }
 }
-.order-search {
-  margin: 0 !important;
+/* Ant Design Modal padding */
+.ant-modal-container {
   padding: 0 !important;
+}
+
+.ant-modal-content {
+  padding: 0 !important;
+}
+
+.ant-modal-body {
+  padding: 0 !important;
+}
+.banner-delete-popover .ant-popover-container {
+  padding: 0 !important;
+}
+
+.banner-delete-popover .ant-popover-inner {
+  padding: 0 !important;
+}
+
+.banner-delete-popover .ant-popover-inner-content {
+  padding: 0 !important;
+}
+
+.banner-delete-popover .ant-popover-body {
+  padding: 0 !important;
+}
+#chart {
+  max-width: 700px;
+  margin: 35px auto;
 }

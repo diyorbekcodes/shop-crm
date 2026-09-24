@@ -12,11 +12,13 @@ import type { TableColumnsType } from "antd";
 
 import { SquarePen, Trash2, Package } from "lucide-react";
 
+import { useState } from "react";
 import { useTheme } from "../../../context/modContext";
 
 import BrandService from "../hook/Brands";
 
 import type { Brand } from "../types/BrandTypes";
+import BrandDetailsModal from "./BrandDetails";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 
@@ -40,13 +42,24 @@ interface BrandTableRowData {
 export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
   const { darkMode } = useTheme();
 
+  const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleRowClickBrand = (record: BrandTableRowData) => {
+    setSelectedBrandId(record.id);
+    setModalOpen(true);
+  };
+
   const { data, isPending, useDeleteBrand } = BrandService();
 
   const deleteBrand = useDeleteBrand();
 
   const brands: Brand[] = data?.data ?? [];
 
+  // =========================
   // SEARCH
+  // =========================
+
   const filteredBrands = brands.filter((brand) => {
     const search = searchValue.toLowerCase().trim();
 
@@ -57,7 +70,10 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
     );
   });
 
+  // =========================
   // TABLE DATA
+  // =========================
+
   const tableData: BrandTableRowData[] = filteredBrands.map((brand, index) => ({
     key: brand.id,
     id: brand.id,
@@ -69,6 +85,19 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
     products: brand._count?.products ?? 0,
     isActive: brand.isActive,
   }));
+
+  // =========================
+  // ROW CLICK
+  // =========================
+
+  const handleRowClick = (record: BrandTableRowData) => {
+    setSelectedBrandId(record.id);
+    setModalOpen(true);
+  };
+
+  // =========================
+  // DELETE
+  // =========================
 
   const handleDelete = (id: string) => {
     deleteBrand.mutate(id, {
@@ -83,6 +112,10 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
       },
     });
   };
+
+  // =========================
+  // TABLE COLUMNS
+  // =========================
 
   const columns: TableColumnsType<BrandTableRowData> = [
     {
@@ -262,6 +295,10 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
     },
   ];
 
+  // =========================
+  // RETURN
+  // =========================
+
   return (
     <ConfigProvider
       theme={{
@@ -340,8 +377,23 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
             pageSize: 10,
             showSizeChanger: false,
           }}
+          onRow={(record) => ({
+            onClick: () => handleRowClickBrand(record),
+            className: "cursor-pointer",
+          })}
         />
       </div>
+
+      {/* BRAND DETAILS MODAL */}
+
+      <BrandDetailsModal
+        brandId={selectedBrandId}
+        open={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setSelectedBrandId(null);
+        }}
+      />
     </ConfigProvider>
   );
 }

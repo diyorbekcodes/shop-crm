@@ -4,8 +4,6 @@ import { ConfigProvider } from "antd";
 
 import { useState } from "react";
 
-import { useNavigate } from "react-router";
-
 import { useTheme } from "../../../context/modContext";
 
 import BrandTable from "../components/BrandTable";
@@ -13,8 +11,6 @@ import BrandTable from "../components/BrandTable";
 import BrandModal from "../components/BrandModal";
 
 export default function Brand() {
-  const navigate = useNavigate();
-
   const { darkMode } = useTheme();
 
   const [searchValue, setSearchValue] = useState("");
@@ -112,7 +108,7 @@ export default function Brand() {
             <Search
               placeholder="Search brand..."
               allowClear
-              className="w-[250px]"
+              className="w-62.5"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               onSearch={onSearch}

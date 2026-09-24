@@ -11,6 +11,7 @@ import Products from "./feature/products/pages/Products";
 import AddProduct from "./feature/addProduct/pages/AddProduct";
 import ProductDetails from "./feature/products/components/ProductDetails";
 import Brand from "./feature/brands/pages/Brand";
+import Banners from "./feature/Banners/pages/Banners";
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/customer" element={<Customer />} />
           <Route path="/products" element={<Products />} />
           <Route path="/brands" element={<Brand />} />
+          <Route path="/banners" element={<Banners />} />
           <Route path="/orderManagment" element={<OrderManagment />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/addproducts" element={<AddProduct />} />

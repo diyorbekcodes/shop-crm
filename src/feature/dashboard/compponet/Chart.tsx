@@ -1,109 +1,131 @@
-import Chart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
-import { useIsDark } from "../../hook/UseIsDark";
+import ReactApexChart from "react-apexcharts";
 
-const SignUpChart = () => {
-  const darkMode = useIsDark();
+interface ChartItem {
+  date: string;
+  day: string;
+  orders: number;
+  revenue: number;
+  value: number;
+}
+
+interface SignUpChartProps {
+  data?: {
+    success: boolean;
+    data: {
+      week: "this" | "last";
+      chart: {
+        thisWeek: ChartItem[];
+        lastWeek: ChartItem[];
+        active: ChartItem[];
+      };
+    };
+  };
+}
+
+const SignUpChart = ({ data }: SignUpChartProps) => {
+  // API response:
+  // data.data.chart.active
+  const chartData = data?.data?.chart?.active ?? [];
+
+  const series = [
+    {
+      name: data?.data?.week === "this" ? "This week" : "Last week",
+      data: chartData.map((item) => item.revenue),
+    },
+  ];
 
   const options: ApexOptions = {
     chart: {
-      type: "area",
-      height: 350,
-      zoom: {
-        enabled: false,
-      },
+      type: "line",
+      height: 380,
       toolbar: {
         show: false,
       },
-      background: "transparent",
-    },
-
-    theme: {
-      mode: darkMode ? "dark" : "light",
-    },
-
-    colors: ["#4EA674"],
-
-    dataLabels: {
-      enabled: false,
+      zoom: {
+        enabled: false,
+      },
     },
 
     stroke: {
-      curve: "straight",
-      width: 2,
+      curve: "smooth",
+      width: 3,
     },
 
-    fill: {
-      type: "gradient",
-      gradient: {
-        shadeIntensity: 1,
-        opacityFrom: darkMode ? 0.3 : 0.25,
-        opacityTo: 0.02,
-        stops: [0, 100],
+    markers: {
+      size: 4,
+      hover: {
+        size: 6,
       },
     },
 
     xaxis: {
-      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      categories: chartData.map((item) => item.day),
 
       labels: {
         style: {
-          colors: darkMode ? "#9CA3AF" : "#6B7280",
+          colors: "#9CA3AF",
+          fontSize: "12px",
         },
-      },
-
-      axisBorder: {
-        color: darkMode ? "#374151" : "#E5E7EB",
-      },
-
-      axisTicks: {
-        color: darkMode ? "#374151" : "#E5E7EB",
       },
     },
 
     yaxis: {
       labels: {
         style: {
-          colors: darkMode ? "#9CA3AF" : "#6B7280",
+          colors: "#9CA3AF",
+          fontSize: "12px",
+        },
+
+        formatter: (value) => {
+          if (value >= 1_000_000) {
+            return `${(value / 1_000_000).toFixed(0)}M`;
+          }
+
+          if (value >= 1_000) {
+            return `${(value / 1_000).toFixed(0)}K`;
+          }
+
+          return `${value}`;
         },
       },
     },
 
+    tooltip: {
+      y: {
+        formatter: (value) => `${value.toLocaleString()} UZS`,
+      },
+    },
+
+    dataLabels: {
+      enabled: false,
+    },
+
     grid: {
-      borderColor: darkMode ? "#374151" : "#E5E7EB",
+      borderColor: "#E5E7EB",
       strokeDashArray: 4,
     },
 
     legend: {
-      horizontalAlign: "left",
-
-      labels: {
-        colors: darkMode ? "#F9FAFB" : "#111827",
-      },
+      show: true,
+      position: "top",
+      horizontalAlign: "right",
     },
 
-    tooltip: {
-      theme: darkMode ? "dark" : "light",
-    },
-
-    markers: {
-      size: 0,
-      hover: {
-        size: 5,
-      },
+    noData: {
+      text: "No data",
     },
   };
 
-  const series = [
-    {
-      name: "Sign-ups",
-      data: [1500, 2500, 2000, 1400, 3400, 2300, 2800],
-    },
-  ];
-
   return (
     <div className="w-full">
-      <Chart options={options} series={series} type="area" height={350} />
+      <ReactApexChart
+        options={options}
+        series={series}
+        type="line"
+        height={380}
+        width="100%"
+      />
     </div>
   );
 };

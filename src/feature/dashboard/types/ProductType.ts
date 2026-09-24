@@ -63,3 +63,84 @@ export interface SalesByCountryType {
   changePercent: number;
   share: number;
 }
+export interface DashboardStats {
+  success: boolean;
+  data: DashboardData;
+}
+
+export interface DashboardData {
+  week: string;
+  range: DashboardRange;
+  stats: DashboardStatsData;
+  chart: DashboardChart;
+}
+
+export interface DashboardRange {
+  from: string;
+  to: string;
+}
+
+export interface DashboardStatsData {
+  customers: number;
+  totalProducts: number;
+  stockProducts: number;
+  outOfStock: number;
+  revenue: number;
+}
+
+export interface DashboardChart {
+  thisWeek: ChartItem[];
+  lastWeek: ChartItem[];
+  active: ChartItem[];
+}
+
+export interface ChartItem {
+  date: string;
+  day: string;
+  orders: number;
+  revenue: number;
+  value: number;
+}
+export interface WeeklyReportResponse {
+  success: boolean;
+  data: {
+    week: "this" | "last";
+
+    range: {
+      from: string;
+      to: string;
+    };
+
+    stats: {
+      customers: number;
+      totalProducts: number;
+      stockProducts: number;
+      outOfStock: number;
+      revenue: number;
+    };
+
+    chart: {
+      thisWeek: ChartItem[];
+      lastWeek: ChartItem[];
+      active: ChartItem[];
+    };
+  };
+}
+
+export interface PerMinute {
+  time: string;
+  users: number;
+}
+
+export interface UsersPerMinuteData {
+  total: number;
+  windowMinutes: number;
+  from: string;
+  to: string;
+  perMinute: PerMinute[];
+}
+
+export interface UsersPerMinuteResponse {
+  success: boolean;
+  data: UsersPerMinuteData;
+}

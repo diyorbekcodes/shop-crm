@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../service/pages/api";
 
 import type {
+  BrandDetailsResponse,
   BrandsResponse,
   CreateBrandInput,
   UpdateBrandInput,
@@ -77,6 +78,16 @@ const BrandService = () => {
       },
     });
   };
+  const useDetails = (id?: string) => {
+    return useQuery({
+      queryKey: ["brand", id],
+      queryFn: async () => {
+        const response = await api.get(`/admin/brands/${id}`);
+        return response.data;
+      },
+      enabled: !!id,
+    });
+  };
 
   return {
     data,
@@ -84,6 +95,7 @@ const BrandService = () => {
     useCreateBrand,
     useUpdateBrand,
     useDeleteBrand,
+    useDetails,
   };
 };
 

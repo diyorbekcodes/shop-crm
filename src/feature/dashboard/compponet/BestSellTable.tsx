@@ -10,8 +10,8 @@ const BestSellTable = () => {
   const darkMode = useIsDark();
   // const { bestSellingProduct } = DashboardService();
 
-  // const { data: bestSell,isPending } = bestSellingProduct();
- 
+  // const { data: bestSell, isPending } = bestSellingProduct();
+  // console.log(bestSell);
 
   const { Search } = Input;
 
