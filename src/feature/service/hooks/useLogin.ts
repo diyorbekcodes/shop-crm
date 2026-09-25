@@ -25,10 +25,17 @@ const useLogin = () => {
 
       const admin = data.data;
 
+      if (!admin?.accessToken || !admin?.refreshToken) {
+        localStorage.removeItem("crmAccessToken");
+        localStorage.removeItem("crmRefreshToken");
+        localStorage.removeItem("admin");
+
+        message.error("Login ma'lumotlari noto'g'ri");
+        return;
+      }
+
       localStorage.setItem("crmAccessToken", admin.accessToken);
-
       localStorage.setItem("crmRefreshToken", admin.refreshToken);
-
       localStorage.setItem("admin", JSON.stringify(admin));
 
       message.success("Success");
@@ -38,6 +45,10 @@ const useLogin = () => {
 
     onError: (error) => {
       console.log("Login error:", error);
+
+      localStorage.removeItem("crmAccessToken");
+      localStorage.removeItem("crmRefreshToken");
+      localStorage.removeItem("admin");
 
       message.error("Login yoki password noto'g'ri");
     },

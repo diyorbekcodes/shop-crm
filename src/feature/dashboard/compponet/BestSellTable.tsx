@@ -210,6 +210,7 @@ const BestSellTable = () => {
         {/* TABLE */}
         <div className="overflow-x-auto overflow-y-hidden">
           <Table<Product>
+            
             loading={isPending}
             className="custom-table"
             columns={columns}

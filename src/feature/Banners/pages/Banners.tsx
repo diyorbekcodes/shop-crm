@@ -4,7 +4,6 @@ import {
   Empty,
   Form,
   Image,
-  Popover,
   Skeleton,
   Switch,
   message,
@@ -280,12 +279,31 @@ const Banners = () => {
         {contextHolder}
 
         <div className="flex flex-col gap-5">
-          <Skeleton active />
+          <Skeleton
+            active
+            className={
+              darkMode
+                ? "[&_.ant-skeleton-title]:!bg-[#374151] [&_.ant-skeleton-paragraph>li]:!bg-[#374151]"
+                : ""
+            }
+          />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <Card key={index}>
-                <Skeleton active avatar={false} paragraph={{ rows: 5 }} />
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-5">
+            {Array.from({ length: 2 }).map((_, index) => (
+              <Card
+                key={index}
+                className={darkMode ? "!bg-[#1F2937] !border-[#374151]" : ""}
+              >
+                <Skeleton
+                  active
+                  avatar={false}
+                  paragraph={{ rows: 5 }}
+                  className={
+                    darkMode
+                      ? "[&_.ant-skeleton-title]:!bg-[#374151] [&_.ant-skeleton-paragraph>li]:!bg-[#374151]"
+                      : ""
+                  }
+                />
               </Card>
             ))}
           </div>
@@ -293,7 +311,6 @@ const Banners = () => {
       </div>
     );
   }
-
   return (
     <div className="p-4 md:p-6">
       {contextHolder}

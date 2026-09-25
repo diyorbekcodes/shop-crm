@@ -514,9 +514,16 @@ export default function Sidebar() {
           ) : null}
         </div>
 
-        <NavLink to="/login">
-          <LogOut className="text-[#6A717F] hover:text-red-500 cursor-pointer" />
-        </NavLink>
+        <LogOut
+          onClick={() => {
+            localStorage.removeItem("crmAccessToken");
+            localStorage.removeItem("crmRefreshToken");
+            localStorage.removeItem("admin");
+
+            window.location.href = "/login";
+          }}
+          className="text-[#6A717F] hover:text-red-500 cursor-pointer"
+        />
       </div>
     </div>
   );
