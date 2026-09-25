@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 import { useState } from "react";
-import { Switch } from "antd";
+import { ConfigProvider, Segmented, Switch } from "antd";
 
 import SignUpChart from "../../dashboard/compponet/Chart";
 import CustomerTable from "../compponet/CustomerTable";
@@ -21,13 +21,19 @@ import whatsappIcon from "../../../assets/svg/whatsapp.svg";
 import linkedinIcon from "../../../assets/svg/linkedin.svg";
 
 import CustomerService from "../service/CustomerServise";
+import { useIsDark } from "../../hook/UseIsDark";
+import DashboardService from "../../dashboard/service/DashboardService";
+import CountUp from "../../../context/CountUp";
 
 export default function Customer() {
+  const darkMode = useIsDark();
+  const { thisWeekLastWeek } = DashboardService();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [thisWeek, setThisWeek] = useState(true);
+
   const [activeChart, setActiveChart] = useState("customers");
   const [copied, setCopied] = useState(false);
-
+  const [week, setWeek] = useState<"this" | "last">("this");
+  const { data: weekData } = thisWeekLastWeek(week);
   const handleCopy = async (text?: string) => {
     if (!text) return;
 
@@ -46,31 +52,31 @@ export default function Customer() {
   const { customerData, isCustomerLoading, changeCustomerStatus } =
     CustomerService(selectedCustomerId);
 
-  const stats = [
+  const statsItems = [
     {
-      value: "52k",
-      title: "Customers",
       key: "customers",
+      label: "Customers",
+      value: weekData?.data.stats.customers ?? 0,
     },
     {
-      value: "3.5k",
-      title: "Total Products",
-      key: "products",
+      key: "totalProducts",
+      label: "Total Products",
+      value: weekData?.data.stats.totalProducts ?? 0,
     },
     {
-      value: "2.5k",
-      title: "Stock Products",
-      key: "stock",
+      key: "stockProducts",
+      label: "In Stock",
+      value: weekData?.data.stats.stockProducts ?? 0,
     },
     {
-      value: "0.5k",
-      title: "Out of Stock",
       key: "outOfStock",
+      label: "Out of Stock",
+      value: weekData?.data.stats.outOfStock ?? 0,
     },
     {
-      value: "250k",
-      title: "Revenue",
       key: "revenue",
+      label: "Revenue",
+      value: weekData?.data.stats.revenue ?? 0,
     },
   ];
 
@@ -197,58 +203,98 @@ export default function Customer() {
             </p>
 
             <div className="flex items-center gap-4">
-              <div className="flex bg-[#EAF8E7] dark:bg-[#374151] p-[4px] rounded-[12px] gap-2">
-                <button
-                  className={`text-[12px] text-bold px-[12px] py-[8px] rounded-[8px] ${
-                    thisWeek
-                      ? "bg-[#FFFFFF] dark:bg-[#1F2937] text-[#4EA674]"
-                      : "text-[#6A717F] dark:text-gray-400"
-                  }`}
-                  onClick={() => setThisWeek(true)}
-                >
-                  This week
-                </button>
+              {/* THIS WEEK / LAST WEEK */}
 
-                <button
-                  className={`text-[12px] text-bold px-[12px] py-[8px] rounded-[8px] ${
-                    !thisWeek
-                      ? "bg-[#FFFFFF] dark:bg-[#1F2937] text-[#4EA674]"
-                      : "text-[#6A717F] dark:text-gray-400"
-                  }`}
-                  onClick={() => setThisWeek(false)}
-                >
-                  Last week
-                </button>
-              </div>
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Segmented: {
+                      trackBg: darkMode ? "#1F2937" : "#F3F4F6",
 
-              <div>
-                <EllipsisVertical
-                  size={20}
-                  className="text-gray-500 dark:text-gray-400"
+                      itemColor: darkMode ? "#9CA3AF" : "#6B7280",
+
+                      itemHoverColor: darkMode ? "#FFFFFF" : "#23272E",
+
+                      itemSelectedColor: darkMode ? "#FFFFFF" : "#23272E",
+
+                      itemSelectedBg: darkMode ? "#4B5563" : "#FFFFFF",
+
+                      itemHoverBg: darkMode ? "#374151" : "#FFFFFF",
+
+                      borderRadius: 8,
+                    },
+                  },
+                }}
+              >
+                <Segmented<"this" | "last">
+                  value={week}
+                  options={[
+                    {
+                      label: "This week",
+                      value: "this",
+                    },
+                    {
+                      label: "Last week",
+                      value: "last",
+                    },
+                  ]}
+                  onChange={(value) => {
+                    setWeek(value);
+                  }}
+                  className="
+    !p-[3px]
+    !rounded-[9px]
+    !border
+    !border-[#E5E7EB]
+    dark:!border-[#374151]
+    !bg-[#F3F4F6]
+    dark:!bg-[#1F2937]
+  "
                 />
-              </div>
+              </ConfigProvider>
+
+              <EllipsisVertical
+                size={20}
+                className="text-gray-500 dark:text-[#9CA3AF]"
+              />
             </div>
           </div>
 
           {/* STATS */}
 
-          <div className="grid grid-cols-5 gap-4 mb-4 mx-[4px]">
-            {stats.map((item) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-4">
+            {statsItems.map((item) => (
               <div
                 key={item.key}
                 onClick={() => setActiveChart(item.key)}
-                className={`flex flex-col items-start p-4 cursor-pointer border-b-[2px] transition-all ${
-                  activeChart === item.key
-                    ? "bg-[linear-gradient(180deg,rgba(78,166,116,0)_0%,rgba(78,166,116,0.04)_100%)] border-b-[#4EA674]"
-                    : "border-b-[#EAF8E7] dark:border-b-[#374151]"
-                }`}
+                className={`
+                 flex flex-col items-start justify-between
+                 p-3
+                 cursor-pointer
+                 border-b-[2px]
+                 transition-all
+         
+                 ${
+                   activeChart === item.key
+                     ? `
+                       bg-[linear-gradient(
+                         180deg,
+                         rgba(78,166,116,0)_0%,
+                         rgba(78,166,116,0.08)_100%
+                       )]
+                       border-b-[#4EA674]
+                     `
+                     : "border-b-[#E5E7EB] dark:border-b-[#374151]"
+                 }
+               `}
               >
-                <p className="font-bold text-[24px] dark:text-white">
-                  {item.value}
+                <p className="font-bold text-[#000000] dark:text-white text-[20px]">
+                  <CountUp end={Number(item.value)} />
+                  {item.key === "revenue" && " UZS"}
                 </p>
 
-                <p className="text-[13px] text-[#8B909A] dark:text-gray-400 font-medium">
-                  {item.title}
+                <p className="text-[13px]  text-[#8B909A] dark:text-[#9CA3AF] font-medium">
+                  {item.label}
                 </p>
               </div>
             ))}
@@ -256,8 +302,8 @@ export default function Customer() {
 
           {/* CHART */}
 
-          <div>
-            <SignUpChart />
+          <div className="w-full">
+            <SignUpChart data={weekData} />
           </div>
         </div>
       </div>

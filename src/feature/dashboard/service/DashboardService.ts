@@ -27,11 +27,21 @@ const DashboardService = () => {
     });
   };
   const bestSellingProduct = () => {
-    return useQuery<SalesByCountryType[]>({
+    return useQuery({
       queryKey: ["bestSellingProduct"],
       queryFn: async () => {
         const res = await api.get("/admin/dashboard/best-selling");
-        console.log("BEST SELLERS RESPONSE:", res.data.data);
+
+        return res.data.data;
+      },
+    });
+  };
+  const topProducts = () => {
+    return useQuery({
+      queryKey: ["topProducts"],
+      queryFn: async () => {
+        const res = await api.get("/admin/dashboard/top-products");
+
         return res.data.data;
       },
     });
@@ -65,6 +75,7 @@ const DashboardService = () => {
     bestSellingProduct,
     thisWeekLastWeek,
     realTime,
+    topProducts,
   };
 };
 export default DashboardService;

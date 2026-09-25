@@ -1,71 +1,78 @@
 import { ListFilter } from "lucide-react";
 import { Input, Table, Tag, ConfigProvider } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import type { ProductType } from "../types/ProductType";
+
 import { useIsDark } from "../../hook/UseIsDark";
-import foto from "../../../assets/img/iphone.png";
+
 import DashboardService from "../service/DashboardService";
+import type { Product } from "../types/ProductType";
+import type { SearchProps } from "antd/es/input";
+import { useState } from "react";
 
 const BestSellTable = () => {
   const darkMode = useIsDark();
-  // const { bestSellingProduct } = DashboardService();
+  const { bestSellingProduct } = DashboardService();
+  const [searchValue, setSearchValue] = useState("");
+  const onSearch: SearchProps["onSearch"] = (value) => {
+    setSearchValue(value);
+  };
 
-  // const { data: bestSell, isPending } = bestSellingProduct();
-  // console.log(bestSell);
+  const { data: bestSell, isPending } = bestSellingProduct();
+  console.log(bestSell);
 
   const { Search } = Input;
+  const filterSearch = bestSell?.filter((order: Product) => {
+    const search = searchValue.toLowerCase().trim();
 
-  const data: ProductType[] = [
-    {
-      key: "1",
-      product: "Apple iPhone 13",
-      image: foto,
-      totalOrder: 104,
-      status: "Completed",
-      price: 999,
-    },
-    {
-      key: "2",
-      product: "Samsung Galaxy S23",
-      image: foto,
-      totalOrder: 85,
-      status: "Pending",
-      price: 899,
-    },
-    {
-      key: "3",
-      product: "MacBook Air M2",
-      image: foto,
-      totalOrder: 65,
-      status: "Completed",
-      price: 1299,
-    },
-  ];
+    if (!search) return true;
 
-  const columns: ColumnsType<ProductType> = [
+    const productMatch = order.name?.toLowerCase().includes(search);
+
+    const skuMatch = order.sku?.toLowerCase().includes(search);
+
+    const statusMatch = order.status?.toLowerCase().includes(search);
+
+    return productMatch || skuMatch || statusMatch;
+  });
+  const columns: ColumnsType<Product> = [
     {
       title: "Product",
-      dataIndex: "product",
-      key: "product",
+      dataIndex: "name",
+      key: "name",
       render: (_, record) => (
         <div className="flex items-center gap-3">
           <img
             src={record.image}
-            alt={record.product}
+            alt={record.name}
             className="w-[45px] h-[45px] rounded-lg object-contain"
           />
 
-          <span className="font-semibold text-[#4B465C] dark:text-[#F9FAFB]">
-            {record.product}
-          </span>
+          <div className="flex flex-col">
+            <span className="font-semibold text-[#4B465C] dark:text-[#F9FAFB]">
+              {record.name}
+            </span>
+
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              SKU: {record.sku}
+            </span>
+          </div>
         </div>
       ),
     },
 
     {
-      title: "Total Order",
-      dataIndex: "totalOrder",
-      key: "totalOrder",
+      title: "Total Orders",
+      dataIndex: "totalOrders",
+      key: "totalOrders",
+      render: (value) => (
+        <span className="text-[#23272E] dark:text-[#F9FAFB]">{value}</span>
+      ),
+    },
+
+    {
+      title: "Stock",
+      dataIndex: "availableStock",
+      key: "availableStock",
       render: (value) => (
         <span className="text-[#23272E] dark:text-[#F9FAFB]">{value}</span>
       ),
@@ -77,11 +84,11 @@ const BestSellTable = () => {
       key: "status",
       render: (status) => {
         const color =
-          status === "Completed"
+          status === "Stock"
             ? "green"
-            : status === "Pending"
-              ? "orange"
-              : "red";
+            : status === "Out of Stock"
+              ? "red"
+              : "orange";
 
         return <Tag color={color}>{status}</Tag>;
       },
@@ -93,15 +100,22 @@ const BestSellTable = () => {
       key: "price",
       render: (price) => (
         <span className="font-semibold text-[#23272E] dark:text-[#F9FAFB]">
-          ${price.toFixed(2)}
+          {price.toLocaleString("uz-UZ")} so'm
+        </span>
+      ),
+    },
+
+    {
+      title: "Revenue",
+      dataIndex: "revenue",
+      key: "revenue",
+      render: (revenue) => (
+        <span className="font-semibold text-[#23272E] dark:text-[#F9FAFB]">
+          {revenue.toLocaleString("uz-UZ")} so'm
         </span>
       ),
     },
   ];
-
-  const handleSearch = (value: string) => {
-    console.log("Search:", value);
-  };
 
   return (
     <ConfigProvider
@@ -160,8 +174,15 @@ const BestSellTable = () => {
             <Search
               placeholder="Search product..."
               allowClear
-              onSearch={handleSearch}
-              className="w-[220px]"
+              value={searchValue}
+              onChange={(e) => {
+                setSearchValue(e.target.value);
+              }}
+              onSearch={onSearch}
+              className="w-[220px !outline-none
+    !shadow-none
+    [&_*]:!outline-none
+    [&_*]:!shadow-none"
             />
 
             {/* FILTER */}
@@ -188,10 +209,11 @@ const BestSellTable = () => {
 
         {/* TABLE */}
         <div className="overflow-x-auto overflow-y-hidden">
-          <Table
+          <Table<Product>
+            loading={isPending}
             className="custom-table"
             columns={columns}
-            dataSource={data}
+            dataSource={filterSearch}
             pagination={false}
           />
         </div>

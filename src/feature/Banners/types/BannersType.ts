@@ -62,3 +62,16 @@ export interface UpdateBannerData {
 export interface UpdateBannerStatusData {
   isActive: boolean;
 }
+
+export interface BannerFormValues {
+  title: string;
+  subtitle: string;
+  image: string;
+  mobileImage: string;
+  buttonText: string;
+  link: string;
+  sortOrder: number;
+  isActive: boolean;
+  startDate: string;
+  endDate: string;
+}

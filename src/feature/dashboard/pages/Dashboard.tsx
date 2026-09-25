@@ -1,7 +1,6 @@
 import { ChevronUp, EllipsisVertical } from "lucide-react";
 import { useState } from "react";
-import { Segmented, Skeleton, ConfigProvider, Input } from "antd";
-import foto from "../../../assets/img/iphone.png";
+import { Segmented, Skeleton, ConfigProvider, Input, Spin } from "antd";
 
 import SignUpChart from "../compponet/Chart";
 import BestSellingProduct from "../compponet/BestSellTable";
@@ -9,32 +8,63 @@ import BestSellingProduct from "../compponet/BestSellTable";
 import map from "../../../assets/img/bg-map.png";
 import us from "../../../assets/img/us 1.png";
 
-import type { DashboardStatsType } from "../types/ProductType";
+import type {
+  DashboardStatsType,
+  Product,
+  TopProduct,
+} from "../types/ProductType";
 import DashboardService from "../service/DashboardService";
 import { useIsDark } from "../../hook/UseIsDark";
 import CountUp from "../../../context/CountUp";
 import ChartColumn from "../compponet/ChartColumn";
 import AnimatedProgress from "../../../context/AnimatedProgress";
 import { useNavigate } from "react-router";
+import type { SearchProps } from "antd/es/input";
 
 export default function Dashboard() {
   const darkMode = useIsDark();
   const navigate = useNavigate();
   const { Search } = Input;
 
-  const { isPending, kpisData, salesByCountr, thisWeekLastWeek, realTime } =
-    DashboardService();
+  const {
+    isPending,
+    kpisData,
+    salesByCountr,
+    thisWeekLastWeek,
+    topProducts,
+    realTime,
+  } = DashboardService();
+
+  const { data: topProductsData, isPending: topProductsPanding } =
+    topProducts();
+  console.log(topProductsData);
+
   const [week, setWeek] = useState<"this" | "last">("this");
   const { data: salesData, isPending: salesPending } = salesByCountr();
   const { data: weekData } = thisWeekLastWeek(week);
   const { data: realTimeData, isPending: realTimePanding } = realTime();
 
   const salesDatas = salesData ?? [];
+ 
 
   const kpisDatas: DashboardStatsType | undefined = kpisData;
 
   const [activeChart, setActiveChart] = useState("customers");
+  const [searchValue, setSearchValue] = useState("");
+  const onSearch: SearchProps["onSearch"] = (value) => {
+    setSearchValue(value);
+  };
+  const filterSearch = topProductsData?.filter((order: Product) => {
+    const search = searchValue.toLowerCase().trim();
 
+    if (!search) return true;
+
+    const productMatch = order.name?.toLowerCase().includes(search);
+
+    const skuMatch = order.sku?.toLowerCase().includes(search);
+
+    return productMatch || skuMatch;
+  });
   const statsItems = [
     {
       key: "customers",
@@ -514,7 +544,7 @@ export default function Dashboard() {
                 className="
     min-h-[200px]
     mx-[-16px]
-    p-[20px]
+    p-[10px]
     bg-no-repeat
     bg-cover
     bg-center
@@ -567,9 +597,15 @@ export default function Dashboard() {
                         />
 
                         <div>
-                          <p className="font-bold text-[14px]">
-                            <CountUp end={Number(item.sales)} />
-                          </p>
+                          <div className="font-bold text-[14px] flex ">
+                            <CountUp
+                              end={Number(item.sales)}
+                              formattingFn={(value) =>
+                                value.toLocaleString("uz-UZ")
+                              }
+                            />{" "}
+                            {/* <p className="font-bold text-[14px]">so'm</p> */}
+                          </div>
 
                           <p className="text-[12px] text-[#8B909A] dark:text-[#9CA3AF]">
                             {item.name}
@@ -599,7 +635,7 @@ export default function Dashboard() {
                               className="rotate-180"
                             />
                           )}
-                          <CountUp end={Number(item.share)} />%
+                          <CountUp end={Number(item.changePercent)} />%
                         </p>
 
                         <div className="bg-[#F0F3FF] dark:bg-[#374151] w-[150px] sm:w-[179px] h-[6px] rounded-[10px] overflow-hidden">
@@ -637,7 +673,10 @@ export default function Dashboard() {
             <div className="flex justify-between items-center mb-4">
               <p className="font-bold text-[18px]">Top Products</p>
 
-              <p onClick={()=>navigate("/products")} className="text-[12px] cursor-pointer font-regular text-[#6467F2]">
+              <p
+                onClick={() => navigate("/products")}
+                className="text-[12px] cursor-pointer font-regular text-[#6467F2]"
+              >
                 All products
               </p>
             </div>
@@ -681,70 +720,44 @@ export default function Dashboard() {
                 <Search
                   placeholder="Search product..."
                   allowClear
-                  className="w-full"
+                  value={searchValue}
+                  onChange={(e) => {
+                    setSearchValue(e.target.value);
+                  }}
+                  onSearch={onSearch}
+                  className="w-full !outline-none
+    !shadow-none
+    [&_*]:!outline-none
+    [&_*]:!shadow-none"
                 />
               </div>
             </ConfigProvider>
 
             {/* PRODUCT 1 */}
 
-            <div className="flex justify-between items-center mt-4 p-2 border-b border-[#E0E0E0] dark:border-[#374151] gap-2">
-              <img
-                src={foto}
-                alt="Apple iPhone 13"
-                className="w-[45px] h-[45px] object-contain"
-              />
+            {filterSearch?.map((item: TopProduct) =>
+              topProductsPanding ? (
+                <Spin />
+              ) : (
+                <div className="flex justify-between items-center mt-4 p-2 border-b border-[#E0E0E0] dark:border-[#374151] gap-2">
+                  <img
+                    src={item.image}
+                    alt="Apple iPhone 13"
+                    className="w-[45px] h-[45px] object-contain rounded-lg"
+                  />
 
-              <div className="flex-1">
-                <p className="font-medium text-[15px]">Apple iPhone 13</p>
+                  <div className="flex-1">
+                    <p className="font-medium text-[15px]">{item.name}</p>
 
-                <p className="text-[12px] text-[#8B909A] dark:text-[#9CA3AF]">
-                  Item: #FXZ-4567
-                </p>
-              </div>
+                    <p className="text-[12px] text-[#8B909A] dark:text-[#9CA3AF]">
+                      {item.sku}
+                    </p>
+                  </div>
 
-              <p className="font-bold text-[15px]">$999.00</p>
-            </div>
-
-            {/* PRODUCT 2 */}
-
-            <div className="flex justify-between items-center mt-4 p-2 border-b border-[#E0E0E0] dark:border-[#374151] gap-2">
-              <img
-                src={foto}
-                alt="Apple iPhone 13"
-                className="w-[45px] h-[45px] object-contain"
-              />
-
-              <div className="flex-1">
-                <p className="font-medium text-[15px]">Apple iPhone 13</p>
-
-                <p className="text-[12px] text-[#8B909A] dark:text-[#9CA3AF]">
-                  Item: #FXZ-4567
-                </p>
-              </div>
-
-              <p className="font-bold text-[15px]">$999.00</p>
-            </div>
-
-            {/* PRODUCT 3 */}
-
-            <div className="flex justify-between items-center mt-4 p-2 border-b border-[#E0E0E0] dark:border-[#374151] gap-2">
-              <img
-                src={foto}
-                alt="Apple iPhone 13"
-                className="w-[45px] h-[45px] object-contain"
-              />
-
-              <div className="flex-1">
-                <p className="font-medium text-[15px]">Apple iPhone 13</p>
-
-                <p className="text-[12px] text-[#8B909A] dark:text-[#9CA3AF]">
-                  Item: #FXZ-4567
-                </p>
-              </div>
-
-              <p className="font-bold text-[15px]">$999.00</p>
-            </div>
+                  <p className="font-bold text-[15px]">{item.price} so'm</p>
+                </div>
+              ),
+            )}
           </div>
         </div>
       </div>

@@ -1,10 +1,15 @@
-export interface ProductType {
-  key: string;
-  product: string;
+export interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  sku: string;
   image: string;
-  totalOrder: number;
-  status: "Completed" | "Pending" | "Cancelled";
   price: number;
+  orders: number;
+  totalOrders: number;
+  revenue: number;
+  availableStock: number;
+  status: string;
 }
 export interface DashboardStatsType {
   label: string;
@@ -143,4 +148,16 @@ export interface UsersPerMinuteData {
 export interface UsersPerMinuteResponse {
   success: boolean;
   data: UsersPerMinuteData;
+}
+export interface TopProduct {
+  id: string;
+  name: string;
+  sku: string;
+  image: string;
+  price: number;
+}
+
+export interface ProductResponse {
+  success: boolean;
+  data: Product[];
 }
