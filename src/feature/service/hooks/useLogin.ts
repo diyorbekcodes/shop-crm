@@ -21,7 +21,7 @@ const useLogin = () => {
     },
 
     onSuccess: (data) => {
-      console.log("Login response:", data);
+     
 
       const admin = data.data;
 

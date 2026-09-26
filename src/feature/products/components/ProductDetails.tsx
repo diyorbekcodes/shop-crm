@@ -242,21 +242,21 @@ const ProductDetails = () => {
       </div>
 
       {/* MAIN */}
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[45%_55%]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(380px,0.85fr)_minmax(0,1.15fr)]">
         {/* LEFT */}
         <div
           className={
             darkMode
-              ? "rounded-sm border border-[#374151] bg-[#1F2937] p-6"
-              : "rounded-sm border border-[#E2EDE9] bg-white p-6 shadow-[0_2px_8px_rgba(15,23,42,0.04)]"
+              ? "self-start rounded-sm border border-[#374151] bg-[#1F2937] p-6 xl:sticky xl:top-6"
+              : "self-start rounded-sm border border-[#E2EDE9] bg-white p-6 shadow-[0_2px_8px_rgba(15,23,42,0.04)] xl:sticky xl:top-6"
           }
         >
           {/* MAIN IMAGE */}
           <div
             className={
               darkMode
-                ? "flex h-[420px] items-center justify-center rounded-sm border border-[#374151] bg-[#111827]"
-                : "flex h-[420px] items-center justify-center rounded-sm border border-[#E6EFEB] bg-[#F8FBFA]"
+                ? "flex h-[420px] items-center justify-center rounded-sm border border-[#374151] bg-[#111827] p-3"
+                : "flex h-[420px] items-center justify-center rounded-sm border border-[#E6EFEB] bg-[#F8FBFA] p-3"
             }
           >
             {mainImage ? (
@@ -377,7 +377,7 @@ const ProductDetails = () => {
         </div>
 
         {/* RIGHT */}
-        <div className="space-y-5">
+        <div className="min-w-0 space-y-5">
           {/* BASIC INFO */}
           <div
             className={

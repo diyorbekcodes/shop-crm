@@ -144,23 +144,7 @@ export default function Dashboard() {
                 </span>
               </p>
 
-              <div className="flex justify-end mt-auto pt-4">
-                <button
-                  className="
-                    bg-white dark:bg-[#1F2937]
-                    border border-[#6467F2]
-                    text-[#6467F2]
-                    text-[16px]
-                    py-1 px-5
-                    rounded-[50px]
-                    hover:bg-[#6467F2]
-                    hover:text-white
-                    transition
-                  "
-                >
-                  Details
-                </button>
-              </div>
+              
             </div>
           )}
         </div>
@@ -210,23 +194,7 @@ export default function Dashboard() {
                 </span>
               </p>
 
-              <div className="flex justify-end mt-auto pt-4">
-                <button
-                  className="
-                    bg-white dark:bg-[#1F2937]
-                    border border-[#6467F2]
-                    text-[#6467F2]
-                    text-[16px]
-                    py-1 px-5
-                    rounded-[50px]
-                    hover:bg-[#6467F2]
-                    hover:text-white
-                    transition
-                  "
-                >
-                  Details
-                </button>
-              </div>
+              
             </div>
           )}
         </div>
@@ -361,23 +329,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="flex justify-end mt-auto pt-4">
-                <button
-                  className="
-                    bg-white dark:bg-[#1F2937]
-                    border border-[#6467F2]
-                    text-[#6467F2]
-                    text-[16px]
-                    py-1 px-5
-                    rounded-[50px]
-                    hover:bg-[#6467F2]
-                    hover:text-white
-                    transition
-                  "
-                >
-                  Details
-                </button>
-              </div>
+              
             </div>
           )}
         </div>

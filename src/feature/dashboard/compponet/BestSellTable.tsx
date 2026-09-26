@@ -61,18 +61,9 @@ const BestSellTable = () => {
     },
 
     {
-      title: "Total Orders",
+      title: "Orders",
       dataIndex: "totalOrders",
       key: "totalOrders",
-      render: (value) => (
-        <span className="text-[#23272E] dark:text-[#F9FAFB]">{value}</span>
-      ),
-    },
-
-    {
-      title: "Stock",
-      dataIndex: "availableStock",
-      key: "availableStock",
       render: (value) => (
         <span className="text-[#23272E] dark:text-[#F9FAFB]">{value}</span>
       ),
@@ -210,7 +201,6 @@ const BestSellTable = () => {
         {/* TABLE */}
         <div className="overflow-x-auto overflow-y-hidden">
           <Table<Product>
-            
             loading={isPending}
             className="custom-table"
             columns={columns}
