@@ -124,6 +124,7 @@ export default function Dashboard() {
   const salesDatas = salesData ?? [];
 
   const kpisDatas: DashboardStatsType | undefined = kpisData;
+console.log(kpisDatas);
 
   const [searchValue, setSearchValue] = useState("");
   const onSearch: SearchProps["onSearch"] = (value) => {

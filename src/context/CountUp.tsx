@@ -3,9 +3,14 @@ import { useEffect, useState } from "react";
 interface CountUpProps {
   end: number;
   duration?: number;
+  formattingFn?: (value: number) => string;
 }
 
-export default function CountUp({ end, duration = 1000 }: CountUpProps) {
+export default function CountUp({
+  end,
+  duration = 1000,
+  formattingFn,
+}: CountUpProps) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -13,7 +18,7 @@ export default function CountUp({ end, duration = 1000 }: CountUpProps) {
     let animationFrame: number;
 
     const animate = (currentTime: number) => {
-      if (!startTime) {
+      if (startTime === null) {
         startTime = currentTime;
       }
 
@@ -35,5 +40,5 @@ export default function CountUp({ end, duration = 1000 }: CountUpProps) {
     };
   }, [end, duration]);
 
-  return <>{count.toLocaleString()}</>;
+  return <>{formattingFn ? formattingFn(count) : count.toLocaleString()}</>;
 }
