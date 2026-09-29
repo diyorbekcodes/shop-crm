@@ -254,16 +254,7 @@ console.log(orders);
             selectionColumnWidth: 48,
           },
 
-          Checkbox: {
-            colorPrimary: "#4EA674",
-            colorPrimaryHover: "#5DBA83",
-
-            colorBgContainer: isDark ? "#1F2937" : "#FFFFFF",
-
-            colorBorder: isDark ? "#6B7280" : "#D1D5DB",
-
-            borderRadiusSM: 4,
-          },
+          
 
           Pagination: {
             itemBg: isDark ? "#374151" : "#FFFFFF",
@@ -317,9 +308,7 @@ console.log(orders);
     >
       <div className="mt-8">
         <Table<ProductTableRow>
-          rowSelection={{
-            type: "checkbox",
-          }}
+         
           columns={columns}
           dataSource={tableData}
           loading={loading}

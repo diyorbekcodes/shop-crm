@@ -292,3 +292,37 @@ body {
 .customer-status-switch.ant-switch-checked:hover {
   background-color: #2563eb !important;
 }
+.dark-dropdown-menu,
+.light-dropdown-menu {
+  padding: 4px !important;
+}
+
+.dark-dropdown-menu .ant-dropdown-menu-item,
+.light-dropdown-menu .ant-dropdown-menu-item {
+  min-height: 28px !important;
+  height: 28px !important;
+  padding: 3px 8px !important;
+  margin: 1px 0 !important;
+  border-radius: 6px !important;
+}
+
+.dark-dropdown-menu .ant-dropdown-menu-title-content,
+.light-dropdown-menu .ant-dropdown-menu-title-content {
+  line-height: 20px !important;
+}
+
+/* Divider */
+.dark-dropdown-menu .ant-dropdown-menu-item-divider,
+.light-dropdown-menu .ant-dropdown-menu-item-divider {
+  margin: 3px 0 !important;
+}
+
+/* DARK HOVER */
+.dark-dropdown-menu .ant-dropdown-menu-item:hover {
+  background-color: #374151 !important;
+}
+
+/* LIGHT HOVER */
+.light-dropdown-menu .ant-dropdown-menu-item:hover {
+  background-color: #f3f4f6 !important;
+}

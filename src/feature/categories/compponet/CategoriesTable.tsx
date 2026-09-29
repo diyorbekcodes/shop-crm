@@ -1,6 +1,6 @@
-import { ConfigProvider, Table, theme } from "antd";
+import { ConfigProvider, Dropdown, Table, theme } from "antd";
 import type { TableColumnsType } from "antd";
-import { SquarePen, Trash } from "lucide-react";
+import { EllipsisVertical, SquarePen, Trash, Trash2 } from "lucide-react";
 
 import foto from "../../../assets/img/iphone.png";
 
@@ -113,50 +113,115 @@ export default function CategoriesTable({
     {
       title: "Action",
       key: "action",
-      render: (_, record) => (
-        <div className="flex items-center gap-3">
-          {/* EDIT */}
-          <button onClick={() => onEdit(record)} className="cursor-pointer">
-            <SquarePen
-              size={18}
-              className={
-                darkMode
-                  ? "text-gray-400 hover:text-[#4EA674]"
-                  : "text-[#6A717F] hover:text-[#4EA674]"
-              }
-            />
-          </button>
 
-          {/* DELETE */}
-          <button
-            disabled={
-              deleteCategory.isPending && deleteCategory.variables === record.id
-            }
-            onClick={() => deleteCategory.mutate(record.id)}
-            className="cursor-pointer disabled:cursor-not-allowed"
+      render: (_, record) => {
+        const deleting =
+          deleteCategory.isPending && deleteCategory.variables === record.id;
+
+        const items = [
+          {
+            key: "edit",
+            label: (
+              <div className="flex items-center gap-2 px-0.5 py-0.5">
+                <SquarePen size={14} className="text-[#4EA674]" />
+
+                <span
+                  className={
+                    darkMode
+                      ? "text-[13px] text-gray-200"
+                      : "text-[13px] text-gray-700"
+                  }
+                >
+                  Edit
+                </span>
+              </div>
+            ),
+          },
+
+          {
+            type: "divider" as const,
+          },
+
+          {
+            key: "delete",
+            disabled: deleting,
+            label: (
+              <div className="flex items-center gap-2 px-0.5 py-0.5">
+                <Trash2 size={14} className="text-red-500" />
+
+                <span className="text-[13px] text-red-500">
+                  {deleting ? "Deleting..." : "Delete"}
+                </span>
+              </div>
+            ),
+          },
+        ];
+
+        return (
+          <div
+            className="flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
           >
-            {deleteCategory.isPending &&
-            deleteCategory.variables === record.id ? (
-              <span
-                className={
-                  darkMode
-                    ? "inline-block w-[18px] h-[18px] border-2 border-gray-600 border-t-red-500 rounded-full animate-spin"
-                    : "inline-block w-[18px] h-[18px] border-2 border-gray-300 border-t-red-500 rounded-full animate-spin"
-                }
-              />
-            ) : (
-              <Trash
-                size={18}
-                className={
-                  darkMode
-                    ? "text-gray-400 hover:text-red-500"
-                    : "text-[#6A717F] hover:text-red-500"
-                }
-              />
-            )}
-          </button>
-        </div>
-      ),
+            <Dropdown
+              trigger={["click"]}
+              placement="bottomRight"
+              menu={{
+                items,
+                className: darkMode
+                  ? "dark-dropdown-menu"
+                  : "light-dropdown-menu",
+
+                onClick: ({ key }) => {
+                  if (key === "edit") {
+                    onEdit(record);
+                  }
+
+                  if (key === "delete" && !deleting) {
+                    deleteCategory.mutate(record.id);
+                  }
+                },
+              }}
+              popupRender={(menu) => (
+                <div
+                  className={`
+        overflow-hidden
+        rounded-lg
+        border
+        shadow-lg
+        ${
+          darkMode ? "border-gray-700 bg-[#1F2937]" : "border-gray-200 bg-white"
+        }
+      `}
+                >
+                  {menu}
+                </div>
+              )}
+            >
+              <button
+                type="button"
+                onClick={(e) => e.stopPropagation()}
+                className={`
+      flex
+      h-8
+      w-8
+      items-center
+      justify-center
+      rounded-lg
+      transition-all
+      duration-200
+      ${
+        darkMode
+          ? "text-gray-400 hover:bg-gray-700 hover:text-white"
+          : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+      }
+    `}
+              >
+                <EllipsisVertical size={18} />
+              </button>
+            </Dropdown>
+          </div>
+        );
+      },
     },
   ];
 
@@ -198,12 +263,7 @@ export default function CategoriesTable({
             rowSelectedHoverBg: darkMode ? "#264B73" : "#BFDBFE",
           },
 
-          Checkbox: {
-            colorPrimary: "#3B82F6",
-            colorPrimaryHover: "#60A5FA",
-            colorBgContainer: darkMode ? "#1F2937" : "#FFFFFF",
-            colorBorder: darkMode ? "#6B7280" : "#D1D5DB",
-          },
+          
 
           Pagination: {
             itemBg: darkMode ? "#374151" : "#FFFFFF",
@@ -227,9 +287,7 @@ export default function CategoriesTable({
           isLoading || createCotegories.isPending || editCategories.isPending
         }
         rowKey="id"
-        rowSelection={{
-          type: "checkbox",
-        }}
+       
         columns={columns}
         dataSource={filteredProducts}
         pagination={{

@@ -1,9 +1,9 @@
-import { ConfigProvider, Table, Tag, theme } from "antd";
+import { ConfigProvider, Spin, Table, Tag, theme } from "antd";
 import type { TableColumnsType } from "antd";
 import CustomerService from "../service/CustomerServise";
 import type { CustomerType } from "../types/CustomerType";
 import { useIsDark } from "../../hook/UseIsDark";
-
+import avatar from "../../../assets/img/avatar.png";
 const { darkAlgorithm, defaultAlgorithm } = theme;
 
 interface Props {
@@ -15,7 +15,8 @@ export default function CustomerTable({
   selectedCustomerId,
   onSelectCustomer,
 }: Props) {
-  const { data, isLoading } = CustomerService(selectedCustomerId);
+  const { data, isLoading, isCustomerLoading } =
+    CustomerService(selectedCustomerId);
 
   const isDark = useIsDark();
 
@@ -23,23 +24,12 @@ export default function CustomerTable({
 
   const columns: TableColumnsType<CustomerType> = [
     {
-      title: "Customer Id",
-      dataIndex: "id",
-      key: "id",
-      render: (id: string) => (
-        <span className="text-[#6A717F] dark:text-[#9CA3AF]">
-          {id.slice(0, 8)}...
-        </span>
-      ),
-    },
-
-    {
       title: "Name",
       key: "name",
       render: (_, record) => (
         <div className="flex items-center gap-3">
           <img
-            src={record.avatar || "/avatar.png"}
+            src={record.avatar || avatar}
             alt=""
             className="w-10 h-10 rounded-full object-cover"
           />
@@ -54,6 +44,17 @@ export default function CustomerTable({
             </p>
           </div>
         </div>
+      ),
+    },
+
+    {
+      title: "Customer Id",
+      dataIndex: "id",
+      key: "id",
+      render: (id: string) => (
+        <span className="text-[#6A717F] dark:text-[#9CA3AF]">
+          {id.slice(0, 8)}...
+        </span>
       ),
     },
 
@@ -127,16 +128,9 @@ export default function CustomerTable({
             rowSelectedHoverBg: isDark ? "#264B73" : "#BFDBFE",
           },
 
-          Checkbox: {
-            colorPrimary: "#2563EB",
-            colorPrimaryHover: "#1D4ED8",
-            colorBgContainer: isDark ? "#1F2937" : "#FFFFFF",
-            colorBorder: isDark ? "#6B7280" : "#D1D5DB",
-          },
-
           Pagination: {
             itemBg: isDark ? "#374151" : "#FFFFFF",
-            itemBgDisabled: isDark ? "#1F2937" : "#F3F4F6",
+
             itemActiveBg: "#4EA674",
             itemLinkBg: isDark ? "#374151" : "#FFFFFF",
             colorText: isDark ? "#D1D5DB" : "#374151",
@@ -159,9 +153,7 @@ export default function CustomerTable({
       <Table<CustomerType>
         rowKey={(record) => record.id}
         loading={isLoading}
-        rowSelection={{
-          type: "checkbox",
-        }}
+        className=" overflow-hidden"
         onRow={(record) => ({
           onClick: () => {
             onSelectCustomer(record.id);

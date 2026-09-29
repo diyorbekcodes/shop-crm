@@ -1,10 +1,16 @@
-import { ConfigProvider, Table, Tag, Image, theme } from "antd";
+import { ConfigProvider, Table, Tag, Image, theme, Dropdown } from "antd";
 import type { TableColumnsType } from "antd";
 import type { Product, ProductTableRowData } from "../types/ProductTypes";
 import ProductService from "../service/ProductService";
 import { useTheme } from "../../../context/modContext";
 import { useNavigate } from "react-router";
-import { SquarePen, Trash } from "lucide-react";
+import {
+  EllipsisVertical,
+  MoreHorizontal,
+  SquarePen,
+  Trash,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
 import EditModal from "./EditModal";
 
@@ -177,46 +183,102 @@ export default function ProductTable({ searchValue }: ProductTableProps) {
         const deleting =
           deleteProduct.isPending && deleteProduct.variables === record.id;
 
+        const items = [
+          {
+            key: "edit",
+            label: (
+              <div className="flex items-center gap-3 px-1 py-1">
+                <SquarePen
+                  size={16}
+                  className={darkMode ? "text-blue-400" : "text-blue-600"}
+                />
+                <span className={darkMode ? "text-gray-200" : "text-gray-700"}>
+                  Edit
+                </span>
+              </div>
+            ),
+          },
+          {
+            type: "divider" as const,
+          },
+          {
+            key: "delete",
+            label: (
+              <div className="flex items-center gap-3 px-1 py-1">
+                <Trash2 size={16} className="text-red-500" />
+                <span className="text-red-500">
+                  {deleting ? "Deleting..." : "Delete"}
+                </span>
+              </div>
+            ),
+            disabled: deleting,
+          },
+        ];
+
         return (
           <div
-            className="flex items-center gap-3"
             onClick={(e) => e.stopPropagation()}
+            className="flex items-center justify-center"
           >
-            {/* EDIT */}
-            <button type="button" className="cursor-pointer">
-              <SquarePen
-                size={18}
-                className="cursor-pointer"
-                onClick={() => handleEdit(record.id)}
-              />
-            </button>
+            <Dropdown
+              trigger={["click"]}
+              placement="bottomRight"
+              menu={{
+                items,
+                className: darkMode
+                  ? "dark-dropdown-menu"
+                  : "light-dropdown-menu",
+                onClick: ({ key }) => {
+                  if (key === "edit") {
+                    handleEdit(record.id);
+                  }
 
-            {/* DELETE */}
-            <button
-              type="button"
-              disabled={deleting}
-              onClick={() => deleteProduct.mutate(record.id)}
-              className="cursor-pointer disabled:cursor-not-allowed"
-            >
-              {deleting ? (
-                <span
-                  className={
-                    darkMode
-                      ? "inline-block w-[18px] h-[18px] border-2 border-gray-600 border-t-red-500 rounded-full animate-spin"
-                      : "inline-block w-[18px] h-[18px] border-2 border-gray-300 border-t-red-500 rounded-full animate-spin"
+                  if (key === "delete") {
+                    deleteProduct.mutate(record.id);
                   }
-                />
-              ) : (
-                <Trash
-                  size={18}
-                  className={
-                    darkMode
-                      ? "text-gray-400 hover:text-red-500"
-                      : "text-[#6A717F] hover:text-red-500"
-                  }
-                />
+                },
+              }}
+              popupRender={(menu) => (
+                <div
+                  className={`
+                overflow-hidden
+                rounded-xl
+                border
+                shadow-xl
+                backdrop-blur-sm
+                ${
+                  darkMode
+                    ? "border-gray-700 bg-[#1F2937]"
+                    : "border-gray-200 bg-white"
+                }
+              `}
+                >
+                  {menu}
+                </div>
               )}
-            </button>
+            >
+              <button
+                type="button"
+                onClick={(e) => e.stopPropagation()}
+                className={`
+              flex
+              h-9
+              w-9
+              items-center
+              justify-center
+              rounded-lg
+              transition-all
+              duration-200
+              ${
+                darkMode
+                  ? "text-gray-400 hover:bg-gray-700 hover:text-white"
+                  : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+              }
+            `}
+              >
+                <EllipsisVertical className="cursor-pointer" size={20} />
+              </button>
+            </Dropdown>
           </div>
         );
       },

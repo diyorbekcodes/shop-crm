@@ -6,11 +6,12 @@ import {
   theme,
   Popconfirm,
   message,
+  Dropdown,
 } from "antd";
 
 import type { TableColumnsType } from "antd";
 
-import { SquarePen, Trash2, Package } from "lucide-react";
+import { SquarePen, Trash2, Package, EllipsisVertical } from "lucide-react";
 
 import { useState } from "react";
 import { useTheme } from "../../../context/modContext";
@@ -232,63 +233,125 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
     {
       title: "Action",
       key: "action",
-      width: 120,
+      width: 80,
 
       render: (_, record) => {
         const deleting =
           deleteBrand.isPending && deleteBrand.variables === record.id;
 
+        const items = [
+          {
+            key: "edit",
+            label: (
+              <div className="flex items-center gap-2">
+                <SquarePen size={14} className="text-[#4EA674]" />
+
+                <span
+                  className={
+                    darkMode
+                      ? "text-[13px] text-gray-200"
+                      : "text-[13px] text-gray-700"
+                  }
+                >
+                  Edit
+                </span>
+              </div>
+            ),
+          },
+
+          {
+            type: "divider" as const,
+          },
+
+          {
+            key: "delete",
+            disabled: deleting,
+            label: (
+              <Popconfirm
+                title="Brandni o'chirish"
+                description="Haqiqatan ham ushbu brandni o'chirmoqchimisiz?"
+                okText="Ha"
+                cancelText="Yo'q"
+                placement="topRight"
+                onConfirm={(e) => {
+                  e?.stopPropagation();
+                  handleDelete(record.id);
+                }}
+                onCancel={(e) => e?.stopPropagation()}
+              >
+                <div
+                  className="flex items-center gap-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {deleting ? (
+                    <span
+                      className="
+                    inline-block
+                    h-[14px]
+                    w-[14px]
+                    animate-spin
+                    rounded-full
+                    border-2
+                    border-gray-400
+                    border-t-red-500
+                  "
+                    />
+                  ) : (
+                    <Trash2 size={14} className="text-red-500" />
+                  )}
+
+                  <span className="text-[13px] text-red-500">
+                    {deleting ? "Deleting..." : "Delete"}
+                  </span>
+                </div>
+              </Popconfirm>
+            ),
+          },
+        ];
+
         return (
           <div
-            className="flex items-center gap-4"
+            className="flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* EDIT */}
+            <Dropdown
+              trigger={["click"]}
+              placement="bottomRight"
+              menu={{
+                items,
+                className: darkMode
+                  ? "dark-dropdown-menu"
+                  : "light-dropdown-menu",
 
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(record.id);
+                onClick: ({ key }) => {
+                  if (key === "edit") {
+                    onEdit(record.id);
+                  }
+                },
               }}
-              className={
-                darkMode
-                  ? "cursor-pointer text-[#9CA3AF] transition hover:text-[#4EA674]"
-                  : "cursor-pointer text-[#6B7280] transition hover:text-[#2F8F68]"
-              }
-            >
-              <SquarePen size={18} />
-            </button>
-
-            {/* DELETE */}
-
-            <Popconfirm
-              title="Brandni o'chirish"
-              description="Haqiqatan ham ushbu brandni o'chirmoqchimisiz?"
-              okText="Ha"
-              cancelText="Yo'q"
-              placement="topRight"
-              onConfirm={() => handleDelete(record.id)}
             >
               <button
                 type="button"
-                disabled={deleting}
                 onClick={(e) => e.stopPropagation()}
-                className="cursor-pointer text-[#6B7280] transition hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className={`
+              flex
+              h-8
+              w-8
+              items-center
+              justify-center
+              rounded-lg
+              transition-all
+              duration-200
+              ${
+                darkMode
+                  ? "text-gray-400 hover:bg-gray-700 hover:text-white"
+                  : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+              }
+            `}
               >
-                {deleting ? (
-                  <span
-                    className={
-                      darkMode
-                        ? "inline-block h-[18px] w-[18px] animate-spin rounded-full border-2 border-gray-600 border-t-red-500"
-                        : "inline-block h-[18px] w-[18px] animate-spin rounded-full border-2 border-gray-300 border-t-red-500"
-                    }
-                  />
-                ) : (
-                  <Trash2 size={18} />
-                )}
+                <EllipsisVertical size={18} />
               </button>
-            </Popconfirm>
+            </Dropdown>
           </div>
         );
       },

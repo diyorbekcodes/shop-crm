@@ -6,10 +6,11 @@ import { useState } from "react";
 import ProductTable from "../compponet/ProductTable";
 import { useIsDark } from "../../hook/UseIsDark";
 import OrderService from "../service/Order";
+import { useTheme } from "../../../context/modContext";
 
 export default function OrderManagment() {
-  const { data } = OrderService();
-
+  const { data, isPending } = OrderService();
+  const { darkMode, toggleDarkMode } = useTheme();
   const orders = Array.isArray(data) ? data : [];
 
   const isDark = useIsDark();
@@ -39,8 +40,6 @@ export default function OrderManagment() {
       label: "Price: Low → High",
     },
   ];
-
-  
 
   const onSearch: SearchProps["onSearch"] = (value) => {
     setSearchValue(value.trim());
@@ -215,13 +214,13 @@ export default function OrderManagment() {
         overflow-hidden
         rounded-xl
         border
-        border-[#E5E7EB]
+        border-gray-200
         bg-white
         p-1.5
         shadow-xl
-        dark:border-[#374151]
-        dark:bg-[#1F2937]
-        dark:shadow-black/30
+        dark:border-gray-700
+        dark:bg-[#111827]
+        dark:shadow-black/40
       "
                   >
                     {/* Newest */}
@@ -235,7 +234,7 @@ export default function OrderManagment() {
           justify-between
           rounded-lg
           px-3
-          py-2.5
+          py-2
           text-left
           text-[13px]
           font-medium
@@ -245,16 +244,17 @@ export default function OrderManagment() {
           ${
             sortBy === "newest"
               ? `
-                bg-[#4EA674]/10
-                text-[#4EA674]
+                bg-gray-100
+                text-gray-900
+                dark:bg-[#374151]
+                dark:text-white
               `
               : `
-                text-[#4B5563]
-                hover:bg-[#F3F4F6]
-
-                dark:text-[#B8C1CC]
-                dark:hover:bg-[#374151]
-                dark:hover:text-[#E8EDF2]
+                text-gray-600
+                hover:bg-gray-100
+                dark:text-gray-300
+                dark:hover:bg-[#1F2937]
+                dark:hover:text-white
               `
           }
         `}
@@ -262,7 +262,9 @@ export default function OrderManagment() {
                       <span>Newest first</span>
 
                       {sortBy === "newest" && (
-                        <span className="text-[#4EA674] text-[15px]">✓</span>
+                        <span className="text-[14px] text-gray-700 dark:text-gray-200">
+                          ✓
+                        </span>
                       )}
                     </button>
 
@@ -277,7 +279,7 @@ export default function OrderManagment() {
           justify-between
           rounded-lg
           px-3
-          py-2.5
+          py-2
           text-left
           text-[13px]
           font-medium
@@ -287,16 +289,17 @@ export default function OrderManagment() {
           ${
             sortBy === "oldest"
               ? `
-                bg-[#4EA674]/10
-                text-[#4EA674]
+                bg-gray-100
+                text-gray-900
+                dark:bg-[#374151]
+                dark:text-white
               `
               : `
-                text-[#4B5563]
-                hover:bg-[#F3F4F6]
-
-                dark:text-[#B8C1CC]
-                dark:hover:bg-[#374151]
-                dark:hover:text-[#E8EDF2]
+                text-gray-600
+                hover:bg-gray-100
+                dark:text-gray-300
+                dark:hover:bg-[#1F2937]
+                dark:hover:text-white
               `
           }
         `}
@@ -304,12 +307,14 @@ export default function OrderManagment() {
                       <span>Oldest first</span>
 
                       {sortBy === "oldest" && (
-                        <span className="text-[#4EA674] text-[15px]">✓</span>
+                        <span className="text-[14px] text-gray-700 dark:text-gray-200">
+                          ✓
+                        </span>
                       )}
                     </button>
 
                     {/* Divider */}
-                    <div className="my-1.5 h-px bg-[#E5E7EB] dark:bg-[#374151]" />
+                    <div className="my-1.5 h-px bg-gray-200 dark:bg-gray-700" />
 
                     {/* Price High */}
                     <button
@@ -322,7 +327,7 @@ export default function OrderManagment() {
           justify-between
           rounded-lg
           px-3
-          py-2.5
+          py-2
           text-left
           text-[13px]
           font-medium
@@ -332,16 +337,17 @@ export default function OrderManagment() {
           ${
             sortBy === "price-high"
               ? `
-                bg-[#4EA674]/10
-                text-[#4EA674]
+                bg-gray-100
+                text-gray-900
+                dark:bg-[#374151]
+                dark:text-white
               `
               : `
-                text-[#4B5563]
-                hover:bg-[#F3F4F6]
-
-                dark:text-[#B8C1CC]
-                dark:hover:bg-[#374151]
-                dark:hover:text-[#E8EDF2]
+                text-gray-600
+                hover:bg-gray-100
+                dark:text-gray-300
+                dark:hover:bg-[#1F2937]
+                dark:hover:text-white
               `
           }
         `}
@@ -349,7 +355,9 @@ export default function OrderManagment() {
                       <span>Price: High → Low</span>
 
                       {sortBy === "price-high" && (
-                        <span className="text-[#4EA674] text-[15px]">✓</span>
+                        <span className="text-[14px] text-gray-700 dark:text-gray-200">
+                          ✓
+                        </span>
                       )}
                     </button>
 
@@ -364,7 +372,7 @@ export default function OrderManagment() {
           justify-between
           rounded-lg
           px-3
-          py-2.5
+          py-2
           text-left
           text-[13px]
           font-medium
@@ -374,16 +382,17 @@ export default function OrderManagment() {
           ${
             sortBy === "price-low"
               ? `
-                bg-[#4EA674]/10
-                text-[#4EA674]
+                bg-gray-100
+                text-gray-900
+                dark:bg-[#374151]
+                dark:text-white
               `
               : `
-                text-[#4B5563]
-                hover:bg-[#F3F4F6]
-
-                dark:text-[#B8C1CC]
-                dark:hover:bg-[#374151]
-                dark:hover:text-[#E8EDF2]
+                text-gray-600
+                hover:bg-gray-100
+                dark:text-gray-300
+                dark:hover:bg-[#1F2937]
+                dark:hover:text-white
               `
           }
         `}
@@ -391,7 +400,9 @@ export default function OrderManagment() {
                       <span>Price: Low → High</span>
 
                       {sortBy === "price-low" && (
-                        <span className="text-[#4EA674] text-[15px]">✓</span>
+                        <span className="text-[14px] text-gray-700 dark:text-gray-200">
+                          ✓
+                        </span>
                       )}
                     </button>
                   </div>
@@ -406,52 +417,70 @@ export default function OrderManagment() {
       h-10
       w-10
       shrink-0
+      cursor-pointer
       items-center
       justify-center
       rounded-lg
       border
-      cursor-pointer
       transition-all
       duration-200
 
       ${
-        sortBy !== "newest"
-          ? `
-            border-[#4EA674]
-            bg-[#4EA674]/10
-            text-[#6FCF97]
-          `
-          : `
-            border-[#374151]
-            bg-[#1F2937]
-            text-[#A7B0BE]
-
-            hover:border-[#4EA674]
-            hover:bg-[#26372F]
-            hover:text-[#6FCF97]
-          `
+        darkMode
+          ? sortBy !== "newest"
+            ? `
+              border-gray-500
+              bg-[#374151]
+              text-white
+              shadow-sm
+            `
+            : `
+              border-gray-700
+              bg-[#1F2937]
+              text-gray-400
+              hover:border-gray-500
+              hover:bg-[#374151]
+              hover:text-gray-200
+            `
+          : sortBy !== "newest"
+            ? `
+              border-gray-400
+              bg-gray-100
+              text-gray-700
+            `
+            : `
+              border-gray-300
+              bg-white
+              text-gray-500
+              hover:border-gray-400
+              hover:bg-gray-50
+              hover:text-gray-700
+            `
       }
     `}
                 >
                   <ArrowDownUp
                     size={17}
                     strokeWidth={2}
-                    className="transition-transform duration-200 group-hover:scale-110"
+                    className="
+        transition-transform
+        duration-200
+        group-hover:scale-110
+      "
                   />
 
                   {sortBy !== "newest" && (
                     <span
-                      className="
+                      className={`
           absolute
           -right-0.5
           -top-0.5
           h-2
           w-2
           rounded-full
-          bg-[#6FCF97]
           ring-2
-          ring-[#1F2937]
-        "
+          ${darkMode ? "bg-gray-300 ring-[#111827]" : "bg-gray-600 ring-white"}
+        `}
                     />
                   )}
                 </button>
@@ -462,6 +491,7 @@ export default function OrderManagment() {
           {/* Table */}
           <div className="mt-8">
             <ProductTable
+              loading={isPending}
               dataSource={sortedOrders}
               searchValue={searchValue}
               status={status}

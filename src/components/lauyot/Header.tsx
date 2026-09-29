@@ -69,13 +69,26 @@ export default function Header() {
           {/* Search tugmasi */}
           <button
             type="button"
-            className={
-              darkMode
-                ? "flex items-center justify-center px-3 rounded-r-[8px] bg-[#374151] hover:bg-[#4B5563] transition-colors"
-                : "flex items-center justify-center px-3 rounded-r-[8px] bg-[#4EA674] hover:bg-[#3d8f60] transition-colors"
-            }
+            className={`
+    flex
+    h-full
+    items-center
+    justify-center
+    rounded-r-[8px]
+    border
+    px-3
+    transition-all
+    duration-200
+    active:scale-[0.97]
+
+    ${
+      darkMode
+        ? "border-gray-600 bg-gray-800 border-l-0 text-gray-200 hover:bg-gray-700"
+        : "border-gray-300 border-l-0 bg-white text-gray-500 hover:bg-gray-50"
+    }
+  `}
           >
-            <SearchIcon size={18} className="text-white" />
+            <SearchIcon size={18} strokeWidth={2} />
           </button>
         </div>
 
