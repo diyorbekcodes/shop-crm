@@ -242,10 +242,6 @@ body {
   }
 }
 
-
-
-
-
 .banner-delete-popover .ant-popover-container {
   padding: 0 !important;
 }
@@ -271,4 +267,28 @@ body {
 
 .banner-modal .ant-modal-content {
   padding: 0 !important;
+}
+.chart-details-table-dark .ant-table-tbody > tr > td {
+  color: #f9fafb !important;
+  background: #1f2937 !important;
+}
+
+.chart-details-table-dark .ant-table-tbody > tr:hover > td {
+  background: #263449 !important;
+}
+
+.chart-details-table-light .ant-table-tbody > tr > td {
+  color: #111827 !important;
+  background: #ffffff !important;
+}
+
+.chart-details-table-light .ant-table-tbody > tr:hover > td {
+  background: #f9fafb !important;
+}
+.customer-status-switch.ant-switch-checked {
+  background-color: #3b82f6 !important;
+}
+
+.customer-status-switch.ant-switch-checked:hover {
+  background-color: #2563eb !important;
 }

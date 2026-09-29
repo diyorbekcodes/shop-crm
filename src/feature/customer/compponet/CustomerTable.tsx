@@ -117,18 +117,19 @@ export default function CustomerTable({
             headerColor: isDark ? "#FFFFFF" : "#111827",
 
             colorText: isDark ? "#E5E7EB" : "#374151",
-            rowHoverBg: isDark ? "#374151" : "#F3F4F6",
+            rowHoverBg: isDark ? "#26364A" : "#F3F4F6",
 
             borderColor: isDark ? "#374151" : "#E5E7EB",
             colorBorderSecondary: isDark ? "#374151" : "#E5E7EB",
 
-            rowSelectedBg: isDark ? "#243B30" : "#E8F5EE",
-            rowSelectedHoverBg: isDark ? "#2F4A3C" : "#D7EDE0",
+            // Selected row
+            rowSelectedBg: isDark ? "#1E3A5F" : "#DBEAFE",
+            rowSelectedHoverBg: isDark ? "#264B73" : "#BFDBFE",
           },
 
           Checkbox: {
-            colorPrimary: "#4EA674",
-            colorPrimaryHover: "#5DBA83",
+            colorPrimary: "#2563EB",
+            colorPrimaryHover: "#1D4ED8",
             colorBgContainer: isDark ? "#1F2937" : "#FFFFFF",
             colorBorder: isDark ? "#6B7280" : "#D1D5DB",
           },

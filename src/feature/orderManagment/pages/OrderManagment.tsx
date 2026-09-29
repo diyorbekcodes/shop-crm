@@ -1,17 +1,77 @@
 import Search, { type SearchProps } from "antd/es/input/Search";
-import { ArrowDownUp, EllipsisVertical, ListFilter } from "lucide-react";
-import { ConfigProvider, Segmented } from "antd";
+import { ArrowDownUp } from "lucide-react";
+import { ConfigProvider, Segmented, Dropdown, type MenuProps } from "antd";
+import { useState } from "react";
 
 import ProductTable from "../compponet/ProductTable";
 import { useIsDark } from "../../hook/UseIsDark";
-import { useState } from "react";
+import OrderService from "../service/Order";
 
 export default function OrderManagment() {
+  const { data } = OrderService();
+
+  const orders = Array.isArray(data) ? data : [];
+
   const isDark = useIsDark();
+
+  const [sortBy, setSortBy] = useState("newest");
+  const [status, setStatus] = useState<string>("");
   const [searchValue, setSearchValue] = useState("");
+
+  const sortItems: MenuProps["items"] = [
+    {
+      key: "newest",
+      label: "Newest first",
+    },
+    {
+      key: "oldest",
+      label: "Oldest first",
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "price-high",
+      label: "Price: High → Low",
+    },
+    {
+      key: "price-low",
+      label: "Price: Low → High",
+    },
+  ];
+
+  
+
   const onSearch: SearchProps["onSearch"] = (value) => {
-    setSearchValue(value);
+    setSearchValue(value.trim());
   };
+
+  const sortedOrders = [...orders].sort((a, b) => {
+    switch (sortBy) {
+      case "newest":
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+
+      case "oldest":
+        return (
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+
+      case "price-high":
+        return Number(b.total ?? 0) - Number(a.total ?? 0);
+
+      case "price-low":
+        return Number(a.total ?? 0) - Number(b.total ?? 0);
+
+      default:
+        return 0;
+    }
+  });
+
+  console.log("ORDERS:", orders);
+  console.log("SORTED ORDERS:", sortedOrders);
+
   return (
     <ConfigProvider
       theme={{
@@ -26,20 +86,19 @@ export default function OrderManagment() {
           colorBorder: isDark ? "#374151" : "#E5E7EB",
           colorPrimary: "#4EA674",
 
-          colorFillSecondary: isDark ? "#374151" : "#F3F4F6",
-          colorFillTertiary: isDark ? "#374151" : "#F3F4F6",
-          colorFillQuaternary: isDark ? "#374151" : "#F9FAFB",
-
           borderRadius: 8,
         },
 
         components: {
           Input: {
+            controlHeight: 40,
             colorBgContainer: isDark ? "#374151" : "#FFFFFF",
             colorText: isDark ? "#FFFFFF" : "#111827",
             colorTextPlaceholder: "#9CA3AF",
+
             activeBorderColor: "#4EA674",
             hoverBorderColor: "#4EA674",
+
             activeShadow: "0 0 0 2px rgba(78,166,116,0.15)",
           },
 
@@ -76,6 +135,11 @@ export default function OrderManagment() {
             colorText: isDark ? "#D1D5DB" : "#374151",
             colorPrimary: "#FFFFFF",
           },
+
+          Dropdown: {
+            colorBgElevated: isDark ? "#1F2937" : "#FFFFFF",
+            colorText: isDark ? "#F9FAFB" : "#111827",
+          },
         },
       }}
     >
@@ -88,121 +152,320 @@ export default function OrderManagment() {
         {/* Main Card */}
         <div className="bg-white dark:bg-[#1F2937] p-4 shadow dark:shadow-black/20 rounded-[8px] mt-4">
           {/* Top */}
-          <div className="flex justify-between items-center">
-            {/* Segmented */}
-            <div className="flex items-center">
+          <div className="flex items-center justify-between gap-4 w-full">
+            {/* Status */}
+            <div className="flex items-center h-10">
               <Segmented<string>
-                options={["All order", "Completed", "Pending", "Canceled"]}
+                value={status}
+                options={[
+                  {
+                    label: "All orders",
+                    value: "",
+                  },
+                  {
+                    label: "Pending",
+                    value: "PENDING",
+                  },
+                  {
+                    label: "Processing",
+                    value: "PROCESSING",
+                  },
+                  {
+                    label: "Shipped",
+                    value: "SHIPPED",
+                  },
+                  {
+                    label: "Delivered",
+                    value: "DELIVERED",
+                  },
+                  {
+                    label: "Cancelled",
+                    value: "CANCELLED",
+                  },
+                ]}
                 className="!h-10 !p-1.5"
                 onChange={(value) => {
-                  console.log(value);
+                  setStatus(value);
                 }}
               />
             </div>
 
-            {/* Search + buttons */}
-            <div className="flex gap-2 items-center  ">
-              {/* Search */}
-              {/* <Search
-                placeholder="Search order"
-                allowClear
-                size="large"
-                style={{
-                  width: 240,
-                }}
-              /> */}
+            {/* Search + Sort */}
+            <div className="flex items-center gap-2 h-10">
               <Search
                 placeholder="Search..."
                 allowClear
-                size="large"
-                className="order-search"
+                className="w-[250px] h-10"
                 value={searchValue}
                 onChange={(e) => {
                   setSearchValue(e.target.value);
                 }}
-                onSearch={onSearch}
+                onSearch={(value) => {
+                  onSearch(value);
+                }}
               />
 
-              {/* Filter */}
-              <button
-                className="
-                  flex
-                  items-center
-                  justify-center
-                  cursor-pointer
-                  bg-white
-                  dark:bg-[#374151]
-                  border
-                  border-[#E5E7EB]
-                  dark:border-[#4B5563]
-                  w-[42px]
-                  h-[40px]
-                  rounded
-                  text-[#374151]
-                  dark:text-gray-200
-                  hover:bg-gray-100
-                  dark:hover:bg-[#4B5563]
-                  transition
-                "
-              >
-                <ListFilter size={18} />
-              </button>
+              <Dropdown
+                trigger={["click"]}
+                placement="bottomRight"
+                dropdownRender={() => (
+                  <div
+                    className="
+        w-[200px]
+        overflow-hidden
+        rounded-xl
+        border
+        border-[#E5E7EB]
+        bg-white
+        p-1.5
+        shadow-xl
+        dark:border-[#374151]
+        dark:bg-[#1F2937]
+        dark:shadow-black/30
+      "
+                  >
+                    {/* Newest */}
+                    <button
+                      type="button"
+                      onClick={() => setSortBy("newest")}
+                      className={`
+          flex
+          w-full
+          items-center
+          justify-between
+          rounded-lg
+          px-3
+          py-2.5
+          text-left
+          text-[13px]
+          font-medium
+          transition-all
+          duration-150
 
-              {/* Sort */}
-              <button
-                className="
-                  flex
-                  items-center
-                  justify-center
-                  cursor-pointer
-                  bg-white
-                  dark:bg-[#374151]
-                  border
-                  border-[#E5E7EB]
-                  dark:border-[#4B5563]
-                  w-[42px]
-                  h-[40px]
-                  rounded
-                  text-[#374151]
-                  dark:text-gray-200
-                  hover:bg-gray-100
-                  dark:hover:bg-[#4B5563]
-                  transition
-                "
-              >
-                <ArrowDownUp size={18} />
-              </button>
+          ${
+            sortBy === "newest"
+              ? `
+                bg-[#4EA674]/10
+                text-[#4EA674]
+              `
+              : `
+                text-[#4B5563]
+                hover:bg-[#F3F4F6]
 
-              {/* More */}
-              <button
-                className="
-                  flex
-                  items-center
-                  justify-center
-                  cursor-pointer
-                  bg-white
-                  dark:bg-[#374151]
-                  border
-                  border-[#E5E7EB]
-                  dark:border-[#4B5563]
-                  w-[42px]
-                  h-[40px]
-                  rounded
-                  text-[#374151]
-                  dark:text-gray-200
-                  hover:bg-gray-100
-                  dark:hover:bg-[#4B5563]
-                  transition
-                "
+                dark:text-[#B8C1CC]
+                dark:hover:bg-[#374151]
+                dark:hover:text-[#E8EDF2]
+              `
+          }
+        `}
+                    >
+                      <span>Newest first</span>
+
+                      {sortBy === "newest" && (
+                        <span className="text-[#4EA674] text-[15px]">✓</span>
+                      )}
+                    </button>
+
+                    {/* Oldest */}
+                    <button
+                      type="button"
+                      onClick={() => setSortBy("oldest")}
+                      className={`
+          flex
+          w-full
+          items-center
+          justify-between
+          rounded-lg
+          px-3
+          py-2.5
+          text-left
+          text-[13px]
+          font-medium
+          transition-all
+          duration-150
+
+          ${
+            sortBy === "oldest"
+              ? `
+                bg-[#4EA674]/10
+                text-[#4EA674]
+              `
+              : `
+                text-[#4B5563]
+                hover:bg-[#F3F4F6]
+
+                dark:text-[#B8C1CC]
+                dark:hover:bg-[#374151]
+                dark:hover:text-[#E8EDF2]
+              `
+          }
+        `}
+                    >
+                      <span>Oldest first</span>
+
+                      {sortBy === "oldest" && (
+                        <span className="text-[#4EA674] text-[15px]">✓</span>
+                      )}
+                    </button>
+
+                    {/* Divider */}
+                    <div className="my-1.5 h-px bg-[#E5E7EB] dark:bg-[#374151]" />
+
+                    {/* Price High */}
+                    <button
+                      type="button"
+                      onClick={() => setSortBy("price-high")}
+                      className={`
+          flex
+          w-full
+          items-center
+          justify-between
+          rounded-lg
+          px-3
+          py-2.5
+          text-left
+          text-[13px]
+          font-medium
+          transition-all
+          duration-150
+
+          ${
+            sortBy === "price-high"
+              ? `
+                bg-[#4EA674]/10
+                text-[#4EA674]
+              `
+              : `
+                text-[#4B5563]
+                hover:bg-[#F3F4F6]
+
+                dark:text-[#B8C1CC]
+                dark:hover:bg-[#374151]
+                dark:hover:text-[#E8EDF2]
+              `
+          }
+        `}
+                    >
+                      <span>Price: High → Low</span>
+
+                      {sortBy === "price-high" && (
+                        <span className="text-[#4EA674] text-[15px]">✓</span>
+                      )}
+                    </button>
+
+                    {/* Price Low */}
+                    <button
+                      type="button"
+                      onClick={() => setSortBy("price-low")}
+                      className={`
+          flex
+          w-full
+          items-center
+          justify-between
+          rounded-lg
+          px-3
+          py-2.5
+          text-left
+          text-[13px]
+          font-medium
+          transition-all
+          duration-150
+
+          ${
+            sortBy === "price-low"
+              ? `
+                bg-[#4EA674]/10
+                text-[#4EA674]
+              `
+              : `
+                text-[#4B5563]
+                hover:bg-[#F3F4F6]
+
+                dark:text-[#B8C1CC]
+                dark:hover:bg-[#374151]
+                dark:hover:text-[#E8EDF2]
+              `
+          }
+        `}
+                    >
+                      <span>Price: Low → High</span>
+
+                      {sortBy === "price-low" && (
+                        <span className="text-[#4EA674] text-[15px]">✓</span>
+                      )}
+                    </button>
+                  </div>
+                )}
               >
-                <EllipsisVertical size={18} />
-              </button>
+                <button
+                  type="button"
+                  className={`
+      group
+      relative
+      flex
+      h-10
+      w-10
+      shrink-0
+      items-center
+      justify-center
+      rounded-lg
+      border
+      cursor-pointer
+      transition-all
+      duration-200
+
+      ${
+        sortBy !== "newest"
+          ? `
+            border-[#4EA674]
+            bg-[#4EA674]/10
+            text-[#6FCF97]
+          `
+          : `
+            border-[#374151]
+            bg-[#1F2937]
+            text-[#A7B0BE]
+
+            hover:border-[#4EA674]
+            hover:bg-[#26372F]
+            hover:text-[#6FCF97]
+          `
+      }
+    `}
+                >
+                  <ArrowDownUp
+                    size={17}
+                    strokeWidth={2}
+                    className="transition-transform duration-200 group-hover:scale-110"
+                  />
+
+                  {sortBy !== "newest" && (
+                    <span
+                      className="
+          absolute
+          -right-0.5
+          -top-0.5
+          h-2
+          w-2
+          rounded-full
+          bg-[#6FCF97]
+          ring-2
+          ring-[#1F2937]
+        "
+                    />
+                  )}
+                </button>
+              </Dropdown>
             </div>
           </div>
 
           {/* Table */}
           <div className="mt-8">
-            <ProductTable searchValue={searchValue} />
+            <ProductTable
+              dataSource={sortedOrders}
+              searchValue={searchValue}
+              status={status}
+            />
           </div>
         </div>
       </div>

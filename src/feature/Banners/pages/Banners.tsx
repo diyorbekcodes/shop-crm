@@ -393,7 +393,7 @@ const Banners = () => {
                 ========================= */}
 
                 <div className="relative h-[210px] overflow-hidden">
-                  <Image
+                  <Image width={"100%"} height={"100%"}
                     src={banner.image}
                     alt={banner.title}
                     preview={{

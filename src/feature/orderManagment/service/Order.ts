@@ -12,7 +12,7 @@ const OrderService = () => {
     queryKey: ["order"],
     queryFn: async () => {
       const res = await api.get("/admin/orders");
-      return await res.data;
+      return await res.data.data;
     },
   });
   const useProductDetails = (orderId: string) => {

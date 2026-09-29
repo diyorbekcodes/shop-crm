@@ -13,6 +13,7 @@ import Brand from "./feature/brands/pages/Brand";
 import Banners from "./feature/Banners/pages/Banners";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
+import ChartDetails from "./feature/dashboard/compponet/ChartDetials";
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/" element={<Lauyot />}>
             <Route index element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/chart-details" element={<ChartDetails />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/customer" element={<Customer />} />
             <Route path="/products" element={<Products />} />

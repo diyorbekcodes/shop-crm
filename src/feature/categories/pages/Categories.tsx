@@ -1,9 +1,4 @@
-import {
-  ArrowDownUp,
-  CirclePlus,
-  EllipsisVertical,
-  ListFilter,
-} from "lucide-react";
+import { ArrowDownUp, CirclePlus } from "lucide-react";
 
 import { useState } from "react";
 import { ConfigProvider, Segmented } from "antd";
@@ -19,11 +14,17 @@ import { useTheme } from "../../../context/modContext";
 export default function Categories() {
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  // Segmented state
+  const [selectedCategory, setSelectedCategory] = useState<
+    "All Categories" | "Active"
+  >("All Categories");
+
+  const [editData, setEditData] = useState<CategoryType | null>(null);
 
   const onSearch: SearchProps["onSearch"] = (value) => {
     setSearchValue(value);
   };
-  const [editData, setEditData] = useState<CategoryType | null>(null);
 
   const { createCotegories, editCategories } = CategoriesService();
 
@@ -44,8 +45,6 @@ export default function Categories() {
         },
         {
           onSuccess: () => {
-            console.log("UPDATE SUCCESS");
-
             setOpen(false);
             setEditData(null);
           },
@@ -77,8 +76,6 @@ export default function Categories() {
   // =========================
 
   const handleEdit = (category: CategoryType) => {
-    console.log("EDIT CATEGORY:", category);
-
     setEditData(category);
     setOpen(true);
   };
@@ -115,17 +112,22 @@ export default function Categories() {
             colorText: darkMode ? "#FFFFFF" : "#111827",
             colorTextPlaceholder: "#9CA3AF",
             colorBorder: darkMode ? "#4B5563" : "#E5E7EB",
+
             hoverBorderColor: "#4EA674",
             activeBorderColor: "#4EA674",
+
             activeShadow: "0 0 0 2px rgba(78,166,116,0.15)",
           },
 
           Segmented: {
             itemColor: darkMode ? "#D1D5DB" : "#374151",
+
             itemHoverColor: darkMode ? "#FFFFFF" : "#111827",
+
             itemSelectedColor: "#FFFFFF",
 
             trackBg: darkMode ? "#374151" : "#F3F4F6",
+
             itemSelectedBg: "#4EA674",
 
             borderRadius: 8,
@@ -178,19 +180,20 @@ export default function Categories() {
           <div className="flex justify-between items-center">
             {/* SEGMENTED */}
 
-            <Segmented<string>
-              options={["All Categories", "Featured"]}
+            <Segmented<"All Categories" | "Active">
+              options={["All Categories", "Active"]}
+              value={selectedCategory}
               className="
-                !h-10
-                !p-1
-                [&_.ant-segmented-group]:!h-full
-                [&_.ant-segmented-item]:!h-full
-                [&_.ant-segmented-item]:!flex
-                [&_.ant-segmented-item]:!items-center
-                [&_.ant-segmented-item]:!justify-center
-              "
+    !h-10
+    !p-1
+    [&_.ant-segmented-group]:!h-full
+    [&_.ant-segmented-item]:!h-full
+    [&_.ant-segmented-item]:!flex
+    [&_.ant-segmented-item]:!items-center
+    [&_.ant-segmented-item]:!justify-center
+  "
               onChange={(value) => {
-                console.log(value);
+                setSelectedCategory(value);
               }}
             />
 
@@ -208,42 +211,43 @@ export default function Categories() {
                 onSearch={onSearch}
               />
 
-              <div
+              <button
+                type="button"
+                onClick={() => {
+                  setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+                }}
                 className={
                   darkMode
                     ? "flex items-center cursor-pointer bg-[#374151] border border-[#4B5563] py-2 px-3 rounded text-gray-200 hover:bg-[#4B5563] transition-colors"
                     : "flex items-center cursor-pointer bg-white border border-[#E5E7EB] py-2 px-3 rounded text-[#374151] hover:bg-gray-100 transition-colors"
                 }
-              >
-                <ListFilter size={18} />
-              </div>
-
-              <div
-                className={
-                  darkMode
-                    ? "flex items-center cursor-pointer bg-[#374151] border border-[#4B5563] py-2 px-3 rounded text-gray-200 hover:bg-[#4B5563] transition-colors"
-                    : "flex items-center cursor-pointer bg-white border border-[#E5E7EB] py-2 px-3 rounded text-[#374151] hover:bg-gray-100 transition-colors"
+                title={
+                  sortOrder === "asc"
+                    ? "Order: Low to High"
+                    : "Order: High to Low"
                 }
               >
-                <ArrowDownUp size={18} />
-              </div>
-
-              <div
-                className={
-                  darkMode
-                    ? "flex items-center cursor-pointer bg-[#374151] border border-[#4B5563] py-2 px-3 rounded text-gray-200 hover:bg-[#4B5563] transition-colors"
-                    : "flex items-center cursor-pointer bg-white border border-[#E5E7EB] py-2 px-3 rounded text-[#374151] hover:bg-gray-100 transition-colors"
-                }
-              >
-                <EllipsisVertical size={18} />
-              </div>
+                <ArrowDownUp
+                  size={18}
+                  className={
+                    sortOrder === "desc"
+                      ? "rotate-180 transition-transform duration-700"
+                      : "transition-transform duration-700"
+                  }
+                />
+              </button>
             </div>
           </div>
 
           {/* ================= TABLE ================= */}
 
           <div className="mt-8">
-            <CategoriesTable searchValue={searchValue} onEdit={handleEdit} />
+            <CategoriesTable
+              searchValue={searchValue}
+              onEdit={handleEdit}
+              selectedCategory={selectedCategory}
+              sortOrder={sortOrder}
+            />
           </div>
         </div>
       </div>

@@ -1,6 +1,14 @@
-import { ChevronUp, EllipsisVertical } from "lucide-react";
+import { ChevronUp, Download, EllipsisVertical, Eye, Users } from "lucide-react";
 import { useState } from "react";
-import { Segmented, Skeleton, ConfigProvider, Input, Spin } from "antd";
+import {
+  Segmented,
+  Skeleton,
+  ConfigProvider,
+  Input,
+  Spin,
+  Dropdown,
+  type MenuProps,
+} from "antd";
 
 import SignUpChart from "../compponet/Chart";
 import BestSellingProduct from "../compponet/BestSellTable";
@@ -20,6 +28,7 @@ import ChartColumn from "../compponet/ChartColumn";
 import AnimatedProgress from "../../../context/AnimatedProgress";
 import { useNavigate } from "react-router";
 import type { SearchProps } from "antd/es/input";
+import api from "../../service/pages/api";
 
 export default function Dashboard() {
   const darkMode = useIsDark();
@@ -34,7 +43,75 @@ export default function Dashboard() {
     topProducts,
     realTime,
   } = DashboardService();
+  const reportMenuItems: MenuProps["items"] = [
+    {
+      key: "details",
+      icon: <Eye size={16} />,
+      label: "View details",
+    },
+    {
+      key: "export",
+      icon: <Download size={16} />,
+      label: "Export data",
+    },
+  ];
+  const exportWeeklyReport = async () => {
+    try {
+      const response = await api.get(
+        `/admin/dashboard/weekly-report?week=${week}`,
+      );
 
+      const report = response.data.data;
+
+      const rows = report.chart.active.map((item: any) => ({
+        Day: item.day,
+        Date: item.date,
+        Orders: item.orders,
+        Revenue: item.revenue,
+      }));
+
+      const headers = ["Day", "Date", "Orders", "Revenue"];
+
+      const csv = [
+        headers.join(","),
+        ...rows.map((row: any) =>
+          [row.Day, row.Date, row.Orders, row.Revenue].join(","),
+        ),
+      ].join("\n");
+
+      const blob = new Blob([csv], {
+        type: "text/csv;charset=utf-8;",
+      });
+
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+
+      link.href = url;
+
+      link.download = `weekly-report-${week}.csv`;
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Export error:", error);
+    }
+  };
+
+  const handleReportMenuClick: MenuProps["onClick"] = async ({ key }) => {
+    if (key === "details") {
+      navigate("/dashboard/chart-details");
+    }
+
+    if (key === "export") {
+      await exportWeeklyReport();
+    }
+  };
   const { data: topProductsData, isPending: topProductsPanding } =
     topProducts();
   console.log(topProductsData);
@@ -45,11 +122,9 @@ export default function Dashboard() {
   const { data: realTimeData, isPending: realTimePanding } = realTime();
 
   const salesDatas = salesData ?? [];
- 
 
   const kpisDatas: DashboardStatsType | undefined = kpisData;
 
-  const [activeChart, setActiveChart] = useState("customers");
   const [searchValue, setSearchValue] = useState("");
   const onSearch: SearchProps["onSearch"] = (value) => {
     setSearchValue(value);
@@ -116,11 +191,6 @@ export default function Dashboard() {
                     {kpisDatas?.label === "30d" ? "30 days" : kpisDatas?.label}
                   </p>
                 </div>
-
-                <EllipsisVertical
-                  size={20}
-                  className="text-gray-500 dark:text-[#9CA3AF]"
-                />
               </div>
 
               <div className="flex items-center gap-4 flex-wrap">
@@ -143,8 +213,6 @@ export default function Dashboard() {
                   so'm)
                 </span>
               </p>
-
-              
             </div>
           )}
         </div>
@@ -165,11 +233,6 @@ export default function Dashboard() {
                     {kpisDatas?.label === "30d" ? "30 days" : kpisDatas?.label}
                   </p>
                 </div>
-
-                <EllipsisVertical
-                  size={20}
-                  className="text-gray-500 dark:text-[#9CA3AF]"
-                />
               </div>
 
               <div className="flex items-center gap-4 flex-wrap">
@@ -193,8 +256,6 @@ export default function Dashboard() {
                   orders)
                 </span>
               </p>
-
-              
             </div>
           )}
         </div>
@@ -215,11 +276,6 @@ export default function Dashboard() {
                     {kpisDatas?.label === "30d" ? "30 days" : kpisDatas?.label}
                   </p>
                 </div>
-
-                <EllipsisVertical
-                  size={20}
-                  className="text-gray-500 dark:text-[#9CA3AF]"
-                />
               </div>
 
               <div className="flex items-stretch gap-4">
@@ -328,8 +384,6 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-
-              
             </div>
           )}
         </div>
@@ -368,6 +422,18 @@ export default function Dashboard() {
 
                         borderRadius: 8,
                       },
+                      Dropdown: {
+                        colorBgElevated: darkMode ? "#1F2937" : "#FFFFFF",
+                        colorText: darkMode ? "#F9FAFB" : "#111827",
+                        colorTextDescription: darkMode ? "#9CA3AF" : "#6B7280",
+                        controlItemBgHover: darkMode ? "#374151" : "#F3F4F6",
+                        controlItemBgActive: darkMode ? "#374151" : "#F3F4F6",
+                        colorBorder: darkMode ? "#374151" : "#E5E7EB",
+                        borderRadiusLG: 10,
+                        boxShadowSecondary: darkMode
+                          ? "0 10px 30px rgba(0, 0, 0, 0.35)"
+                          : "0 10px 30px rgba(0, 0, 0, 0.10)",
+                      },
                     },
                   }}
                 >
@@ -396,12 +462,36 @@ export default function Dashboard() {
     dark:!bg-[#1F2937]
   "
                   />
-                </ConfigProvider>
 
-                <EllipsisVertical
-                  size={20}
-                  className="text-gray-500 dark:text-[#9CA3AF]"
-                />
+                  <Dropdown
+                    trigger={["click"]}
+                    placement="rightTop"
+                    menu={{
+                      items: reportMenuItems,
+                      onClick: handleReportMenuClick,
+                    }}
+                  >
+                    <button
+                      type="button"
+                      className="
+      flex
+      h-9
+      w-9
+      items-center
+      justify-center
+      rounded-lg
+      text-gray-500
+      transition
+      hover:bg-gray-100
+      dark:text-[#9CA3AF]
+      dark:hover:bg-[#374151]
+      dark:hover:text-white
+    "
+                    >
+                      <EllipsisVertical size={20} />
+                    </button>
+                  </Dropdown>
+                </ConfigProvider>
               </div>
             </div>
 
@@ -411,26 +501,15 @@ export default function Dashboard() {
               {statsItems.map((item) => (
                 <div
                   key={item.key}
-                  onClick={() => setActiveChart(item.key)}
                   className={`
         flex flex-col items-start justify-between
         p-3
-        cursor-pointer
+        
         border-b-[2px]
+        border-b-blue-500
         transition-all
 
-        ${
-          activeChart === item.key
-            ? `
-              bg-[linear-gradient(
-                180deg,
-                rgba(78,166,116,0)_0%,
-                rgba(78,166,116,0.08)_100%
-              )]
-              border-b-[#4EA674]
-            `
-            : "border-b-[#E5E7EB] dark:border-b-[#374151]"
-        }
+       
       `}
                 >
                   <p className="font-bold text-[20px]">
@@ -459,65 +538,261 @@ export default function Dashboard() {
         {/* ================= USERS / SALES ================= */}
 
         <div className="xl:col-span-1 grid grid-cols-1 gap-4 self-start">
-          <div className="bg-white dark:bg-[#1F2937] p-4 rounded-[8px] shadow border border-transparent dark:border-[#374151] self-start">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <p className="font-bold text-[14px] text-[#6467F2]">
-                  Users in last 30 minutes
-                </p>
+          {/* =====================================================
+      REAL TIME USERS + SALES
+  ===================================================== */}
 
-                <p className="font-bold text-[32px]">21.5K</p>
+          <div
+            className="
+      overflow-hidden
+      rounded-[12px]
+      border
+      border-[#E5E7EB]
+      bg-white
+      shadow-sm
+      dark:border-[#374151]
+      dark:bg-[#1F2937]
+      dark:shadow-black/10
+    "
+          >
+            {/* ================= USERS HEADER ================= */}
+
+            <div
+              className="
+        border-b
+        border-[#E5E7EB]
+        px-4
+        pt-4
+        pb-3
+        dark:border-[#374151]
+      "
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  {/* ICON */}
+
+                  <div
+                    className="
+              flex
+              h-[42px]
+              w-[42px]
+              shrink-0
+              items-center
+              justify-center
+              rounded-[10px]
+              bg-[#6467F2]/10
+              dark:bg-[#6467F2]/15
+            "
+                  >
+                    <Users size={21} className="text-[#6467F2]" />
+                  </div>
+
+                  {/* TEXT */}
+
+                  <div>
+                    <p
+                      className="
+                text-[13px]
+                font-semibold
+                text-[#6467F2]
+                dark:text-[#818CF8]
+              "
+                    >
+                      Users in last {realTimeData?.windowMinutes ?? 0} minutes
+                    </p>
+
+                    <div className="mt-1 flex items-end gap-2">
+                      <p
+                        className="
+                  text-[30px]
+                  font-bold
+                  leading-none
+                  text-[#23272E]
+                  dark:text-[#F9FAFB]
+                "
+                      >
+                        {realTimeData?.total ?? 0}
+                      </p>
+
+                      <span
+                        className="
+                  mb-[2px]
+                  flex
+                  items-center
+                  gap-1
+                  text-[11px]
+                  font-medium
+                  text-[#28C76F]
+                "
+                      >
+                        <span
+                          className="
+                    h-[6px]
+                    w-[6px]
+                    rounded-full
+                    bg-[#28C76F]
+                    animate-pulse
+                  "
+                        />
+                        Live
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* MORE */}
+
+                
               </div>
-
-              <EllipsisVertical
-                size={20}
-                className="text-gray-500 dark:text-[#9CA3AF]"
-              />
             </div>
 
-            <div className="flex flex-col gap-4">
-              <p className="font-medium">Users per minute</p>
+            {/* ================= USERS CHART ================= */}
 
-              <div>
-                <ChartColumn data={realTimeData} />
+            <div className="px-4 pt-4">
+              <div className="mb-3 flex items-center justify-between">
+                <p
+                  className="
+            text-[13px]
+            font-semibold
+            text-[#374151]
+            dark:text-[#E5E7EB]
+          "
+                >
+                  Users per minute
+                </p>
+
+                <span
+                  className="
+            rounded-full
+            bg-[#6467F2]/10
+            px-2
+            py-1
+            text-[10px]
+            font-semibold
+            text-[#6467F2]
+            dark:bg-[#6467F2]/15
+            dark:text-[#818CF8]
+          "
+                >
+                  Real-time
+                </span>
               </div>
-
-              {/* ================= SALES HEADER ================= */}
-
-              <div className="flex justify-between items-center">
-                <p className="font-semibold text-[18px]">Sales by Country</p>
-
-                <p className="font-semibold text-[18px]">Sales</p>
-              </div>
-
-              {/* ================= SALES BY COUNTRY ================= */}
 
               <div
                 className="
-    min-h-[200px]
-    mx-[-16px]
-    p-[10px]
-    bg-no-repeat
-    bg-cover
-    bg-center
-    flex flex-col
-    gap-[26px]
-    dark:backdrop-blur-[6px]
-    dark:bg-[#1F2937]/35
-  "
-                style={{
-                  backgroundImage: `url(${map})`,
-                }}
+          rounded-[10px]
+          border
+          border-[#E5E7EB]
+          bg-[#F9FAFB]
+          p-2
+          dark:border-[#374151]
+          dark:bg-[#111827]
+        "
+              >
+                <ChartColumn data={realTimeData} />
+              </div>
+            </div>
+
+            {/* ================= SALES HEADER ================= */}
+
+            <div
+              className="
+        mt-5
+        flex
+        items-center
+        justify-between
+        border-t
+        border-[#E5E7EB]
+        px-4
+        pt-4
+        dark:border-[#374151]
+      "
+            >
+              <div>
+                <p
+                  className="
+            text-[16px]
+            font-bold
+            text-[#23272E]
+            dark:text-[#F9FAFB]
+          "
+                >
+                  Sales by Country
+                </p>
+
+                <p
+                  className="
+            mt-1
+            text-[11px]
+            text-[#8B909A]
+            dark:text-[#9CA3AF]
+          "
+                >
+                  Revenue distribution
+                </p>
+              </div>
+
+              <p
+                className="
+          text-[13px]
+          font-semibold
+          text-[#8B909A]
+          dark:text-[#9CA3AF]
+        "
+              >
+                Sales
+              </p>
+            </div>
+
+            {/* ================= SALES BY COUNTRY ================= */}
+
+            <div
+              className="
+        relative
+        mx-3
+        mt-3
+        mb-3
+        min-h-[200px]
+        overflow-hidden
+        rounded-[10px]
+        bg-cover
+        bg-center
+        bg-no-repeat
+        p-2
+        dark:bg-[#111827]/50
+      "
+              style={{
+                backgroundImage: `url(${map})`,
+              }}
+            >
+              {/* DARK OVERLAY */}
+
+              <div
+                className="
+          absolute
+          inset-0
+          bg-white/40
+          dark:bg-[#111827]/50
+        "
+              />
+
+              <div
+                className="
+          relative
+          z-10
+          flex
+          min-h-[200px]
+          flex-col
+          gap-3
+        "
               >
                 {salesPending ? (
-                  <div className="flex justify-center items-center min-h-[200px]">
-                    <p className="text-gray-500 dark:text-[#9CA3AF]">
-                      Loading...
-                    </p>
+                  <div className="flex min-h-[200px] items-center justify-center">
+                    <Spin />
                   </div>
                 ) : salesDatas.length === 0 ? (
-                  <div className="flex justify-center items-center min-h-[200px]">
-                    <p className="text-gray-500 dark:text-[#9CA3AF]">
+                  <div className="flex min-h-[200px] items-center justify-center">
+                    <p className="text-[13px] text-gray-500 dark:text-[#9CA3AF]">
                       Sales data not found
                     </p>
                   </div>
@@ -526,40 +801,73 @@ export default function Dashboard() {
                     <div
                       key={item.code}
                       className="
-    flex
-    justify-between
-    items-start
-    gap-3
-    dark:bg-[#111827]/40
-    dark:backdrop-blur-md
-    dark:border
-    dark:border-white/10
-    dark:rounded-[10px]
-    dark:px-3
-    dark:py-2
-  "
+                flex
+                items-center
+                justify-between
+                gap-3
+                rounded-[9px]
+                border
+                border-white/60
+                bg-white/75
+                px-3
+                py-2
+                backdrop-blur-md
+                dark:border-white/10
+                dark:bg-[#1F2937]/75
+              "
                     >
                       {/* COUNTRY */}
 
-                      <div className="flex gap-[10px] items-center">
-                        <img
-                          src={us}
-                          alt={item.name}
-                          className="w-[30px] h-[20px] object-cover"
-                        />
+                      <div className="flex min-w-0 items-center gap-[10px]">
+                        <div
+                          className="
+                    flex
+                    h-[30px]
+                    w-[30px]
+                    shrink-0
+                    items-center
+                    justify-center
+                    overflow-hidden
+                    rounded-full
+                    bg-white
+                    shadow-sm
+                  "
+                        >
+                          <img
+                            src={us}
+                            alt={item.name}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
 
-                        <div>
-                          <div className="font-bold text-[14px] flex ">
+                        <div className="min-w-0">
+                          <div
+                            className="
+                      flex
+                      items-center
+                      gap-1
+                      text-[13px]
+                      font-bold
+                      text-[#23272E]
+                      dark:text-[#F9FAFB]
+                    "
+                          >
                             <CountUp
                               end={Number(item.sales)}
                               formattingFn={(value) =>
                                 value.toLocaleString("uz-UZ")
                               }
-                            />{" "}
-                            {/* <p className="font-bold text-[14px]">so'm</p> */}
+                            />
                           </div>
 
-                          <p className="text-[12px] text-[#8B909A] dark:text-[#9CA3AF]">
+                          <p
+                            className="
+                      truncate
+                      text-[11px]
+                      text-[#8B909A]
+                      dark:text-[#9CA3AF]
+                    "
+                          >
                             {item.name}
                           </p>
                         </div>
@@ -567,30 +875,39 @@ export default function Dashboard() {
 
                       {/* PERCENTAGE */}
 
-                      <div className="flex flex-col gap-[3px]">
+                      <div className="flex shrink-0 flex-col items-end gap-1">
                         <p
                           className={`
-      font-bold
-      text-[14px]
-      flex
-      justify-end
-      items-center
-      ${item.changePercent >= 0 ? "text-[#28C76F]" : "text-red-500"}
-    `}
+                    flex
+                    items-center
+                    text-[12px]
+                    font-bold
+                    ${
+                      item.changePercent >= 0
+                        ? "text-[#28C76F]"
+                        : "text-red-500"
+                    }
+                  `}
                         >
                           {item.share >= 0 ? (
-                            <ChevronUp size={16} color="#28C76F" />
+                            <ChevronUp size={14} />
                           ) : (
-                            <ChevronUp
-                              size={16}
-                              color="red"
-                              className="rotate-180"
-                            />
+                            <ChevronUp size={14} className="rotate-180" />
                           )}
                           <CountUp end={Number(item.changePercent)} />%
                         </p>
 
-                        <div className="bg-[#F0F3FF] dark:bg-[#374151] w-[150px] sm:w-[179px] h-[6px] rounded-[10px] overflow-hidden">
+                        <div
+                          className="
+                    h-[5px]
+                    w-[110px]
+                    overflow-hidden
+                    rounded-full
+                    bg-[#E5E7EB]
+                    dark:bg-[#374151]
+                    sm:w-[140px]
+                  "
+                        >
                           <AnimatedProgress value={Number(item.share)} />
                         </div>
                       </div>
@@ -598,64 +915,99 @@ export default function Dashboard() {
                   ))
                 )}
               </div>
-
-              {/* ================= VIEW INSIGHT ================= */}
-
-              <button
-                className="
-                bg-white dark:bg-[#1F2937]
-                w-full
-                border border-[#6467F2]
-                text-[#6467F2]
-                text-[16px]
-                py-2
-                px-5
-                rounded-[50px]
-                hover:bg-[#6467F2]
-                hover:text-white
-                transition
-              "
-              >
-                View Insight
-              </button>
             </div>
           </div>
-          {/* Top product */}
-          <div className="bg-white dark:bg-[#1F2937] p-4 shadow rounded-[8px] border border-transparent dark:border-[#374151] self-start">
-            <div className="flex justify-between items-center mb-4">
-              <p className="font-bold text-[18px]">Top Products</p>
 
-              <p
+          {/* =====================================================
+      TOP PRODUCTS
+  ===================================================== */}
+
+          <div
+            className="
+      overflow-hidden
+      rounded-[12px]
+      border
+      border-[#E5E7EB]
+      bg-white
+      p-4
+      shadow-sm
+      dark:border-[#374151]
+      dark:bg-[#1F2937]
+      dark:shadow-black/10
+    "
+          >
+            {/* HEADER */}
+
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <p
+                  className="
+            text-[17px]
+            font-bold
+            text-[#23272E]
+            dark:text-[#F9FAFB]
+          "
+                >
+                  Top Products
+                </p>
+
+                <p
+                  className="
+            mt-1
+            text-[11px]
+            text-[#8B909A]
+            dark:text-[#9CA3AF]
+          "
+                >
+                  Best performing products
+                </p>
+              </div>
+
+              <button
+                type="button"
                 onClick={() => navigate("/products")}
-                className="text-[12px] cursor-pointer font-regular text-[#6467F2]"
+                className="
+          rounded-[7px]
+          px-2
+          py-1
+          text-[12px]
+          font-medium
+          text-[#6467F2]
+          transition
+          hover:bg-[#6467F2]/10
+          dark:text-[#818CF8]
+          dark:hover:bg-[#6467F2]/10
+        "
               >
                 All products
-              </p>
+              </button>
             </div>
 
-            {/* ================= SEARCH ================= */}
+            {/* SEARCH */}
 
             <ConfigProvider
               theme={{
                 token: {
-                  colorBgContainer: darkMode ? "#374151" : "#FFFFFF",
+                  colorPrimary: "#4EA674",
+
+                  colorBgContainer: darkMode ? "#111827" : "#FFFFFF",
 
                   colorText: darkMode ? "#F9FAFB" : "#111827",
 
-                  colorTextPlaceholder: darkMode ? "#9CA3AF" : "#6B7280",
+                  colorTextPlaceholder: darkMode ? "#6B7280" : "#9CA3AF",
 
-                  colorBorder: darkMode ? "#4B5563" : "#E5E7EB",
+                  colorBorder: darkMode ? "#374151" : "#E5E7EB",
                 },
 
                 components: {
                   Input: {
-                    colorBgContainer: darkMode ? "#374151" : "#FFFFFF",
+                    colorBgContainer: darkMode ? "#111827" : "#FFFFFF",
 
                     colorText: darkMode ? "#F9FAFB" : "#111827",
 
                     colorTextPlaceholder: darkMode ? "#9CA3AF" : "#6B7280",
 
-                    colorBorder: darkMode ? "#4B5563" : "#E5E7EB",
+                    colorBorder: darkMode ? "#374151" : "#E5E7EB",
 
                     hoverBorderColor: "#4EA674",
 
@@ -668,7 +1020,7 @@ export default function Dashboard() {
                 },
               }}
             >
-              <div className="mb-4">
+              <div className="mb-3">
                 <Search
                   placeholder="Search product..."
                   allowClear
@@ -677,46 +1029,127 @@ export default function Dashboard() {
                     setSearchValue(e.target.value);
                   }}
                   onSearch={onSearch}
-                  className="w-full !outline-none
-    !shadow-none
-    [&_*]:!outline-none
-    [&_*]:!shadow-none"
+                  className="
+            w-full
+            !rounded-[9px]
+            !outline-none
+            !shadow-none
+            [&_*]:!outline-none
+            [&_*]:!shadow-none
+          "
                 />
               </div>
             </ConfigProvider>
 
-            {/* PRODUCT 1 */}
+            {/* PRODUCTS */}
 
-            {filterSearch?.map((item: TopProduct) =>
-              topProductsPanding ? (
-                <Spin />
+            <div className="flex flex-col">
+              {topProductsPanding ? (
+                <div className="flex justify-center py-6">
+                  <Spin />
+                </div>
+              ) : filterSearch?.length === 0 ? (
+                <div
+                  className="
+            py-8
+            text-center
+            text-[12px]
+            text-[#8B909A]
+            dark:text-[#9CA3AF]
+          "
+                >
+                  Product not found
+                </div>
               ) : (
-                <div className="flex justify-between items-center mt-4 p-2 border-b border-[#E0E0E0] dark:border-[#374151] gap-2">
-                  <img
-                    src={item.image}
-                    alt="Apple iPhone 13"
-                    className="w-[45px] h-[45px] object-contain rounded-lg"
-                  />
+                filterSearch?.map((item: TopProduct) => (
+                  <div
+                    key={item.sku}
+                    className="
+              flex
+              items-center
+              justify-between
+              gap-3
+              border-b
+              border-[#E5E7EB]
+              px-1
+              py-3
+              last:border-b-0
+              dark:border-[#374151]
+            "
+                  >
+                    {/* IMAGE */}
 
-                  <div className="flex-1">
-                    <p className="font-medium text-[15px]">{item.name}</p>
+                    <div
+                      className="
+                flex
+                h-[45px]
+                w-[45px]
+                shrink-0
+                items-center
+                justify-center
+                overflow-hidden
+                rounded-[9px]
+                border
+                border-[#E5E7EB]
+                bg-[#F9FAFB]
+                dark:border-[#374151]
+                dark:bg-[#111827]
+              "
+                    >
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="h-full w-full object-contain"
+                      />
+                    </div>
 
-                    <p className="text-[12px] text-[#8B909A] dark:text-[#9CA3AF]">
-                      {item.sku}
+                    {/* INFO */}
+
+                    <div className="min-w-0 flex-1">
+                      <p
+                        className="
+                  truncate
+                  text-[13px]
+                  font-semibold
+                  text-[#23272E]
+                  dark:text-[#F9FAFB]
+                "
+                      >
+                        {item.name}
+                      </p>
+
+                      <p
+                        className="
+                  mt-1
+                  text-[11px]
+                  text-[#8B909A]
+                  dark:text-[#9CA3AF]
+                "
+                      >
+                        {item.sku}
+                      </p>
+                    </div>
+
+                    {/* PRICE */}
+
+                    <p
+                      className="
+                shrink-0
+                text-[13px]
+                font-bold
+                text-[#23272E]
+                dark:text-[#F3F4F6]
+              "
+                    >
+                      {Number(item.price).toLocaleString("uz-UZ")} so'm
                     </p>
                   </div>
-
-                  <p className="font-bold text-[15px]">{item.price} so'm</p>
-                </div>
-              ),
-            )}
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>
-
-      {/* ================================================= */}
-      {/* THIRD ROW */}
-      {/* ================================================= */}
     </div>
   );
 }

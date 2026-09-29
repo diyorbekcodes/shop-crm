@@ -13,9 +13,16 @@ const { darkAlgorithm, defaultAlgorithm } = theme;
 interface Props {
   onEdit: (category: CategoryType) => void;
   searchValue: string;
+  selectedCategory: "All Categories" | "Active";
+  sortOrder: "asc" | "desc";
 }
 
-export default function CategoriesTable({ onEdit, searchValue }: Props) {
+export default function CategoriesTable({
+  onEdit,
+  selectedCategory,
+  searchValue,
+  sortOrder,
+}: Props) {
   const { isLoading, data, deleteCategory, createCotegories, editCategories } =
     CategoriesService();
 
@@ -26,11 +33,25 @@ export default function CategoriesTable({ onEdit, searchValue }: Props) {
     : (data?.data ?? []);
   console.log(categories);
 
-  const filteredProducts = categories.filter((categorie) => {
-    const search = searchValue.toLowerCase().trim();
+  const filteredProducts = categories
+    .filter((category) => {
+      const search = searchValue.toLowerCase().trim();
 
-    return categorie.name.toLowerCase().includes(search);
-  });
+      const matchesSearch = category.name.toLowerCase().includes(search);
+
+      const matchesSegment =
+        selectedCategory === "All Categories"
+          ? true
+          : category.isActive === true;
+
+      return matchesSearch && matchesSegment;
+    })
+    .sort((a, b) => {
+      const aOrder = a.sortOrder ?? 0;
+      const bOrder = b.sortOrder ?? 0;
+
+      return sortOrder === "asc" ? aOrder - bOrder : bOrder - aOrder;
+    });
   const columns: TableColumnsType<CategoryType> = [
     {
       title: "No",
@@ -166,18 +187,20 @@ export default function CategoriesTable({ onEdit, searchValue }: Props) {
             headerColor: darkMode ? "#FFFFFF" : "#111827",
 
             colorText: darkMode ? "#E5E7EB" : "#374151",
-            rowHoverBg: darkMode ? "#374151" : "#F3F4F6",
+
+            rowHoverBg: darkMode ? "#26364A" : "#F3F4F6",
 
             borderColor: darkMode ? "#374151" : "#E5E7EB",
             colorBorderSecondary: darkMode ? "#374151" : "#E5E7EB",
 
-            rowSelectedBg: darkMode ? "#243B30" : "#E8F5EE",
-            rowSelectedHoverBg: darkMode ? "#2F4A3C" : "#D7EDE0",
+            // Selected row
+            rowSelectedBg: darkMode ? "#1E3A5F" : "#DBEAFE",
+            rowSelectedHoverBg: darkMode ? "#264B73" : "#BFDBFE",
           },
 
           Checkbox: {
-            colorPrimary: "#4EA674",
-            colorPrimaryHover: "#5DBA83",
+            colorPrimary: "#3B82F6",
+            colorPrimaryHover: "#60A5FA",
             colorBgContainer: darkMode ? "#1F2937" : "#FFFFFF",
             colorBorder: darkMode ? "#6B7280" : "#D1D5DB",
           },
