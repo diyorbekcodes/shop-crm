@@ -15,12 +15,11 @@ import logo from "../../assets/img/logo1.png";
 import avatar from "../../assets/img/avatar.png";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
-import { useTheme } from "../../context/modContext";
 import useMe from "../../feature/service/hooks/useMe";
 
 export default function Sidebar() {
   const [sidebar, setSidebar] = useState(false);
-  const { darkMode } = useTheme();
+
   const { data, isLoading } = useMe();
   const adminData = data?.data;
 

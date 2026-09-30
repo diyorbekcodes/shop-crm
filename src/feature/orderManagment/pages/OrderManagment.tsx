@@ -1,6 +1,6 @@
 import Search, { type SearchProps } from "antd/es/input/Search";
 import { ArrowDownUp } from "lucide-react";
-import { ConfigProvider, Segmented, Dropdown, type MenuProps } from "antd";
+import { ConfigProvider, Segmented, Dropdown } from "antd";
 import { useState } from "react";
 
 import ProductTable from "../compponet/ProductTable";
@@ -10,7 +10,7 @@ import { useTheme } from "../../../context/modContext";
 
 export default function OrderManagment() {
   const { data, isPending } = OrderService();
-  const { darkMode, toggleDarkMode } = useTheme();
+  const { darkMode } = useTheme();
   const orders = Array.isArray(data) ? data : [];
 
   const isDark = useIsDark();
@@ -19,27 +19,27 @@ export default function OrderManagment() {
   const [status, setStatus] = useState<string>("");
   const [searchValue, setSearchValue] = useState("");
 
-  const sortItems: MenuProps["items"] = [
-    {
-      key: "newest",
-      label: "Newest first",
-    },
-    {
-      key: "oldest",
-      label: "Oldest first",
-    },
-    {
-      type: "divider",
-    },
-    {
-      key: "price-high",
-      label: "Price: High → Low",
-    },
-    {
-      key: "price-low",
-      label: "Price: Low → High",
-    },
-  ];
+  // const sortItems: MenuProps["items"] = [
+  //   {
+  //     key: "newest",
+  //     label: "Newest first",
+  //   },
+  //   {
+  //     key: "oldest",
+  //     label: "Oldest first",
+  //   },
+  //   {
+  //     type: "divider",
+  //   },
+  //   {
+  //     key: "price-high",
+  //     label: "Price: High → Low",
+  //   },
+  //   {
+  //     key: "price-low",
+  //     label: "Price: Low → High",
+  //   },
+  // ];
 
   const onSearch: SearchProps["onSearch"] = (value) => {
     setSearchValue(value.trim());

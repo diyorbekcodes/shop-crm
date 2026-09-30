@@ -1,6 +1,6 @@
 import { ConfigProvider, Dropdown, Table, theme } from "antd";
 import type { TableColumnsType } from "antd";
-import { EllipsisVertical, SquarePen, Trash, Trash2 } from "lucide-react";
+import { EllipsisVertical, SquarePen,  Trash2 } from "lucide-react";
 
 import foto from "../../../assets/img/iphone.png";
 

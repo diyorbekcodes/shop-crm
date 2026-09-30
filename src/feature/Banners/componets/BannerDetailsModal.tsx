@@ -45,13 +45,7 @@ export default function BannerDetailsModal({
           backgroundColor: "rgba(0,0,0,0.72)",
           backdropFilter: "blur(5px)",
         },
-        content: {
-          padding: 0,
-          overflow: "hidden",
-          borderRadius: 20,
-          background: darkMode ? "#111827" : "#ffffff",
-          border: darkMode ? "1px solid #374151" : "1px solid #e5e7eb",
-        },
+       
         body: {
           padding: 0,
         },

@@ -8,7 +8,7 @@ import type {
   CreateBannerData,
   UpdateBannerData,
   UpdateBannerStatusData,
-} from "../types/banner";
+} from "../types/BannersType";
 
 // ====================
 // GET ALL BANNERS

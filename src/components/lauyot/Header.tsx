@@ -7,7 +7,7 @@ import useMe from "../../feature/service/hooks/useMe";
 export default function Header() {
   const { darkMode, toggleDarkMode } = useTheme();
   const location = useLocation();
-  const { data, isLoading } = useMe();
+  const { data } = useMe();
   const adminData = data?.data;
   const pageTitles: Record<string, string> = {
     "/dashboard": "Dashboard",

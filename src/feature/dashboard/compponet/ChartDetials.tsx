@@ -31,32 +31,32 @@ interface ChartItem {
   value: number;
 }
 
-interface ChartDetailsData {
-  success: boolean;
+// interface ChartDetailsData {
+//   success: boolean;
 
-  data: {
-    week: "this" | "last";
+//   data: {
+//     week: "this" | "last";
 
-    range: {
-      from: string;
-      to: string;
-    };
+//     range: {
+//       from: string;
+//       to: string;
+//     };
 
-    stats: {
-      customers: number;
-      totalProducts: number;
-      stockProducts: number;
-      outOfStock: number;
-      revenue: number;
-    };
+//     stats: {
+//       customers: number;
+//       totalProducts: number;
+//       stockProducts: number;
+//       outOfStock: number;
+//       revenue: number;
+//     };
 
-    chart: {
-      thisWeek: ChartItem[];
-      lastWeek: ChartItem[];
-      active: ChartItem[];
-    };
-  };
-}
+//     chart: {
+//       thisWeek: ChartItem[];
+//       lastWeek: ChartItem[];
+//       active: ChartItem[];
+//     };
+//   };
+// }
 
 /* =====================================================
    COMPONENT
@@ -293,7 +293,7 @@ const ChartDetails = () => {
 
             fixedHeaderSortActiveBg: darkMode ? "#374151" : "#F3F4F6",
 
-            fixedSortActiveBg: darkMode ? "#374151" : "#F3F4F6",
+           
 
             headerSortHoverBg: darkMode ? "#4B5563" : "#F3F4F6",
 

@@ -91,10 +91,10 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
   // ROW CLICK
   // =========================
 
-  const handleRowClick = (record: BrandTableRowData) => {
-    setSelectedBrandId(record.id);
-    setModalOpen(true);
-  };
+  // const handleRowClick = (record: BrandTableRowData) => {
+  //   setSelectedBrandId(record.id);
+  //   setModalOpen(true);
+  // };
 
   // =========================
   // DELETE
@@ -450,7 +450,7 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
       {/* BRAND DETAILS MODAL */}
 
       <BrandDetailsModal
-        brandId={selectedBrandId}
+        brandId={selectedBrandId?? undefined}
         open={modalOpen}
         onClose={() => {
           setModalOpen(false);

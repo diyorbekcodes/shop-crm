@@ -326,3 +326,23 @@ body {
 .light-dropdown-menu .ant-dropdown-menu-item:hover {
   background-color: #f3f4f6 !important;
 }
+/* Common styles */
+.delete-banner-popover .ant-popover-inner {
+  padding: 0;
+  border-radius: 16px;
+  transition: all 0.2s ease;
+}
+
+/* Light mode */
+.delete-banner-popover.light .ant-popover-inner {
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Dark mode */
+.delete-banner-popover.dark .ant-popover-inner {
+  border: 1px solid #374151;
+  background: #111827;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+}

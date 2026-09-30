@@ -28,11 +28,12 @@ import { useNavigate } from "react-router";
 import { useTheme } from "../../../context/modContext";
 
 import CategoriesService from "../../categories/service/CategoriesService";
-import Brands from "../../brands/hook/Brands";
+
 import ProductService from "../../products/service/ProductService";
 
 import type { CreateProductInput } from "../../products/types/ProductTypes";
 import BrandService from "../../brands/hook/Brands";
+import type { CategoryType } from "../../categories/types/CategoriesType";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 
@@ -89,7 +90,7 @@ export default function AddProduct() {
 
   const { data: brandsData, isPending: isBrands } = BrandService();
 
-  const categories = categoriesData?.data ?? [];
+  const categories:CategoryType[] = categoriesData?.data ?? [];
   const brands = brandsData?.data ?? [];
 
   // =========================
@@ -266,23 +267,7 @@ export default function AddProduct() {
           })),
         ],
 
-        variants: selectedColor
-          ? [
-              {
-                sku: `${generateSku(values.name)}-${selectedColor.toUpperCase()}`,
-
-                price: values.price,
-
-                stock,
-
-                attributes: {
-                  color: selectedColor,
-                },
-
-                isActive: true,
-              },
-            ]
-          : [],
+       
       };
 
       createProduct(productData, {

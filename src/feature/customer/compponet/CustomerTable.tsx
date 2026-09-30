@@ -1,4 +1,4 @@
-import { ConfigProvider, Spin, Table, Tag, theme } from "antd";
+import { ConfigProvider, Table, Tag, theme } from "antd";
 import type { TableColumnsType } from "antd";
 import CustomerService from "../service/CustomerServise";
 import type { CustomerType } from "../types/CustomerType";
@@ -15,7 +15,7 @@ export default function CustomerTable({
   selectedCustomerId,
   onSelectCustomer,
 }: Props) {
-  const { data, isLoading, isCustomerLoading } =
+  const { data, isLoading } =
     CustomerService(selectedCustomerId);
 
   const isDark = useIsDark();

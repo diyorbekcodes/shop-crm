@@ -7,11 +7,11 @@ export interface Banner {
   image: string;
   mobileImage: string | null;
   buttonText: string | null;
-  link: string | null;
+  link: string |undefined;
   sortOrder: number;
   isActive: boolean;
-  startDate: string | null;
-  endDate: string | null;
+  startDate?: string ;
+  endDate?: string ;
   deletedAt: string | null;
   createdAt: string;
   updatedAt: string;

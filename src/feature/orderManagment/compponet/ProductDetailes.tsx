@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import {
   ConfigProvider,
   Modal,
@@ -189,7 +189,7 @@ export default function OrderDetailsModal({ orderId, open, onClose }: Props) {
             labelColor: isDark ? "#D1D5DB" : "#374151",
             contentColor: isDark ? "#F9FAFB" : "#111827",
 
-            borderColor: isDark ? "#4B5563" : "#E5E7EB",
+            
           },
 
           Select: {

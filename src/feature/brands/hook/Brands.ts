@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../service/pages/api";
 
 import type {
-  BrandDetailsResponse,
+ 
   BrandsResponse,
   CreateBrandInput,
   UpdateBrandInput,

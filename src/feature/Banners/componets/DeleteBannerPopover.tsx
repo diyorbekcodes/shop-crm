@@ -1,8 +1,10 @@
-
 import { Button, Popover } from "antd";
 import { Trash2 } from "lucide-react";
 
+import type { ReactNode } from "react";
+
 interface DeleteBannerPopoverProps {
+  children: ReactNode;
   open: boolean;
   darkMode: boolean;
   loading: boolean;
@@ -21,6 +23,7 @@ export default function DeleteBannerPopover({
 }: DeleteBannerPopoverProps) {
   return (
     <Popover
+      className="delete-banner-popover"
       trigger="click"
       placement="topRight"
       open={open}
@@ -46,9 +49,7 @@ export default function DeleteBannerPopover({
             <div>
               <h4
                 className={`text-sm font-semibold ${
-                  darkMode
-                    ? "text-white"
-                    : "text-gray-900"
+                  darkMode ? "text-white" : "text-gray-900"
                 }`}
               >
                 Bannerni o‘chirish?
@@ -56,9 +57,7 @@ export default function DeleteBannerPopover({
 
               <p
                 className={`mt-1 text-xs leading-5 ${
-                  darkMode
-                    ? "text-gray-400"
-                    : "text-gray-500"
+                  darkMode ? "text-gray-400" : "text-gray-500"
                 }`}
               >
                 Ushbu banner o‘chiriladi.
@@ -68,9 +67,7 @@ export default function DeleteBannerPopover({
 
           <div
             className={`border-t ${
-              darkMode
-                ? "border-[#374151]"
-                : "border-gray-200"
+              darkMode ? "border-[#374151]" : "border-gray-200"
             }`}
           />
 
@@ -104,21 +101,7 @@ export default function DeleteBannerPopover({
           </div>
         </div>
       }
-      styles={{
-        body: {
-          padding: 0,
-          border: darkMode
-            ? "1px solid #374151"
-            : "1px solid #E5E7EB",
-          borderRadius: 16,
-          background: darkMode
-            ? "#111827"
-            : "#ffffff",
-          boxShadow: darkMode
-            ? "0 20px 50px rgba(0,0,0,0.55)"
-            : "0 15px 40px rgba(0,0,0,0.12)",
-        },
-      }}
+      
     >
       <Button
         danger

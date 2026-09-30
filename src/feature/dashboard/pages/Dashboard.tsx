@@ -119,7 +119,7 @@ export default function Dashboard() {
   const [week, setWeek] = useState<"this" | "last">("this");
   const { data: salesData, isPending: salesPending } = salesByCountr();
   const { data: weekData } = thisWeekLastWeek(week);
-  const { data: realTimeData, isPending: realTimePanding } = realTime();
+  const { data: realTimeData } = realTime();
 
   const salesDatas = salesData ?? [];
 

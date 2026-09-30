@@ -164,7 +164,7 @@ export interface CreateProductInput {
   isNew: boolean;
   isPopular: boolean;
   images: CreateProductImageInput[];
-  variants: CreateProductVariantInput[];
+  variants?: CreateProductVariantInput[];
 }
 export interface ProductImage {
   url: string;

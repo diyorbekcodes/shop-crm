@@ -1,15 +1,15 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import api from "../../service/pages/api";
 import type {
   SalesByCountryType,
   DashboardStatsType,
-  DashboardStats,
+ 
   WeeklyReportResponse,
   UsersPerMinuteData,
 } from "../types/ProductType";
 
 const DashboardService = () => {
-  const queryClient = useQueryClient();
+ 
   const { isPending, data: kpisData } = useQuery<DashboardStatsType>({
     queryKey: ["DashboardService"],
     queryFn: async () => {

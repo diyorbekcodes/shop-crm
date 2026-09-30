@@ -22,6 +22,7 @@ import ProductService from "../service/ProductService";
 
 import type { UpdateProductInput } from "../types/ProductTypes";
 import { Save } from "lucide-react";
+import type { CategoryType } from "../../categories/types/CategoriesType";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 
@@ -52,7 +53,7 @@ export default function EditModal({
 
   const { data:brandsData, isPending:isBrands } = Brands();
 
-  const categories = categoriesData?.data ?? [];
+  const categories:CategoryType[] = categoriesData?.data ?? [];
 
   const brands = brandsData?.data ?? [];
 

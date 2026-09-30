@@ -66,17 +66,7 @@ export default function BannerFormModal({
           backgroundColor: "rgba(0,0,0,0.72)",
           backdropFilter: "blur(5px)",
         },
-        content: {
-          padding: 0,
-          borderRadius: 20,
-          background: darkMode ? "#111827" : "#ffffff",
-          border: darkMode
-            ? "1px solid #374151"
-            : "1px solid #e5e7eb",
-          boxShadow: darkMode
-            ? "0 30px 100px rgba(0,0,0,0.75)"
-            : "0 25px 80px rgba(0,0,0,0.15)",
-        },
+       
         body: {
           padding: 0,
         },

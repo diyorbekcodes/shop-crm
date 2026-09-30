@@ -13,7 +13,7 @@ import { useTheme } from "../../../context/modContext";
 import BrandService from "../hook/Brands";
 
 interface BrandDetailsProps {
-  brandId: string | null;
+  brandId: string | undefined;
   open: boolean;
   onClose: () => void;
 }

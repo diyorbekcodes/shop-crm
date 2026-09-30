@@ -128,10 +128,10 @@ const Banners = () => {
           isActive: values.isActive,
           startDate: values.startDate
             ? new Date(values.startDate).toISOString()
-            : undefined,
+            : "",
           endDate: values.endDate
             ? new Date(values.endDate).toISOString()
-            : undefined,
+            : "",
         },
         {
           onSuccess: () => {
@@ -200,10 +200,10 @@ const Banners = () => {
             isActive: values.isActive,
             startDate: values.startDate
               ? new Date(values.startDate).toISOString()
-              : undefined,
+              : "",
             endDate: values.endDate
               ? new Date(values.endDate).toISOString()
-              : undefined,
+              : "",
           },
         },
         {

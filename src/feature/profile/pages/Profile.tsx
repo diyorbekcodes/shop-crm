@@ -16,7 +16,7 @@ import {
   Input,
   Modal,
   Skeleton,
-  Upload,
+
   message,
 } from "antd";
 import { useState } from "react";

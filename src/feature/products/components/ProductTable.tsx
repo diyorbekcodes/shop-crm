@@ -6,9 +6,9 @@ import { useTheme } from "../../../context/modContext";
 import { useNavigate } from "react-router";
 import {
   EllipsisVertical,
-  MoreHorizontal,
+  
   SquarePen,
-  Trash,
+ 
   Trash2,
 } from "lucide-react";
 import { useState } from "react";

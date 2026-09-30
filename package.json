@@ -24,7 +24,6 @@
     "jiti": "^2.7.0",
     "json2mq": "^0.2.0",
     "lightningcss": "^1.33.0",
-    "lightningcss-win32-x64-msvc": "^1.33.0",
     "lucide-react": "^1.43.0",
     "magic-string": "^0.30.21",
     "nanoid": "^3.3.18",
@@ -53,7 +52,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && eslint . && vite build",
     "preview": "vite preview"
   },
   "repository": {
@@ -63,12 +62,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/hojimurodovdiyorbek9-arch/shop-crm/issues"
   },
   "homepage": "https://github.com/hojimurodovdiyorbek9-arch/shop-crm#readme",
   "devDependencies": {
+    "@types/node": "^26.6.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",

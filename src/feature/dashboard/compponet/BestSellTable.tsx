@@ -1,4 +1,4 @@
-import { ListFilter, Search as SearchIcon } from "lucide-react";
+import { ListFilter } from "lucide-react";
 import { ConfigProvider, Dropdown, Input, Table, Tag } from "antd";
 
 import type { ColumnsType } from "antd/es/table";
