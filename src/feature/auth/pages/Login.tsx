@@ -42,7 +42,10 @@ const Login = () => {
             absolute
             left-0
             -top-5
-            w-75
+            hidden
+            md:block
+            w-40
+            lg:w-75
             floating-phone-1
           "
         />
@@ -55,7 +58,10 @@ const Login = () => {
             absolute
             right-0
             -top-10
-            w-75
+            hidden
+            md:block
+            w-40
+            lg:w-75
             floating-phone-2
           "
         />
@@ -68,7 +74,10 @@ const Login = () => {
             absolute
             left-10
             bottom-5
-            w-75
+            hidden
+            md:block
+            w-40
+            lg:w-75
             floating-laptop-1
           "
         />
@@ -81,7 +90,10 @@ const Login = () => {
             absolute
             right-10
             bottom-5
-            w-75
+            hidden
+            md:block
+            w-40
+            lg:w-75
             floating-laptop-2
           "
         />
@@ -96,8 +108,9 @@ const Login = () => {
           login-card
           relative
           z-20
-          w-[400px]
-          p-8
+          w-[min(400px,calc(100vw-2rem))]
+          p-5
+          sm:p-8
           rounded-3xl
           bg-black/35
           backdrop-blur-xl

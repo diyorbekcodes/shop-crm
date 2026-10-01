@@ -6,6 +6,7 @@ import foto from "../../../assets/img/iphone1.png";
 
 import type { CategoryType, CreateCategoryType } from "../types/CategoriesType";
 import { useTheme } from "../../../context/modContext";
+import ImageUpload from "../../components/ImageUpload";
 
 interface Props {
   open: boolean;
@@ -171,10 +172,14 @@ export default function CategoriesModal({
         open={open}
         onCancel={onClose}
         onOk={handleSubmit}
+        width="min(520px, calc(100vw - 24px))"
         okText={editData ? "Update" : "Create"}
         cancelText="Cancel"
         confirmLoading={loading}
         centered
+        styles={{
+          body: { maxHeight: "calc(100dvh - 180px)", overflowY: "auto" },
+        }}
       >
         <Form form={form} layout="vertical" className="mt-5">
           {/* ================= NAME ================= */}
@@ -215,13 +220,16 @@ export default function CategoriesModal({
 
           {/* ================= IMAGE ================= */}
 
-          <Form.Item label="Image URL" name="image">
-            <Input placeholder="https://example.com/image.png" size="large" />
+          <Form.Item label="Image" name="image">
+            <ImageUpload
+              buttonText="Kategoriya rasmini yuklash"
+              previewAlt="Category image"
+            />
           </Form.Item>
 
           {/* ================= SORT + ACTIVE ================= */}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Form.Item
               label="Sort Order"
               name="sortOrder"

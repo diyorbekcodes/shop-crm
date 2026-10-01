@@ -1,5 +1,109 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+html,
+body,
+#root {
+  min-height: 100%;
+  max-width: 100%;
+}
+
+body {
+  overflow-x: clip;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+#root,
+.ant-table-wrapper,
+.ant-table-container {
+  min-width: 0;
+}
+
+.ant-table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.ant-table-content,
+.ant-table-body {
+  overflow-x: auto !important;
+}
+
+.ant-table-cell,
+.ant-form-item-explain,
+.ant-descriptions-item-content {
+  overflow-wrap: anywhere;
+}
+
+.ant-modal-wrap {
+  overflow: auto;
+  padding: 8px;
+}
+
+.ant-modal {
+  max-width: calc(100vw - 16px);
+  margin-inline: auto !important;
+}
+
+.ant-modal-content {
+  max-height: calc(100dvh - 16px);
+  display: flex;
+  flex-direction: column;
+}
+
+.ant-modal-body {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.ant-segmented {
+  max-width: 100%;
+}
+
+.ant-descriptions-view {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 575px) {
+  .ant-modal {
+    width: calc(100vw - 16px) !important;
+  }
+
+  .ant-modal-body {
+    padding-inline: 16px;
+  }
+
+  .ant-segmented {
+    overflow-x: auto;
+  }
+
+  .ant-segmented-group {
+    width: max-content;
+  }
+
+  .banner-modal .ant-modal-body {
+    padding-inline: 0;
+  }
+}
+
+@media (max-width: 1199px) {
+  .ant-table-content > table {
+    min-width: max-content;
+  }
+
+  .ant-table-pagination.ant-pagination {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
 body {
   font-family: "Lato", sans-serif;
   color: inherit;

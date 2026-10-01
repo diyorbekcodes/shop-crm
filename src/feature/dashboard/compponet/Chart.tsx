@@ -115,6 +115,17 @@ const SignUpChart = ({ data }: SignUpChartProps) => {
     noData: {
       text: "No data",
     },
+
+    responsive: [
+      {
+        breakpoint: 576,
+        options: {
+          chart: { height: 300 },
+          legend: { position: "bottom", horizontalAlign: "center" },
+          xaxis: { labels: { style: { fontSize: "10px" } } },
+        },
+      },
+    ],
   };
 
   return (
@@ -123,7 +134,7 @@ const SignUpChart = ({ data }: SignUpChartProps) => {
         options={options}
         series={series}
         type="line"
-        height={380}
+        height="100%"
         width="100%"
       />
     </div>

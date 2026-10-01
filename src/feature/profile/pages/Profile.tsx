@@ -45,16 +45,16 @@ export default function Profile() {
   // Loading
   if (isLoading) {
     return (
-      <div className={darkMode ? "p-6 bg-[#111827] min-h-screen" : "p-6"}>
-        <div className="mb-6 flex items-center justify-between">
-          <div className="w-[300px]">
+      <div className={darkMode ? "min-h-screen bg-[#111827] p-4 sm:p-6" : "p-4 sm:p-6"}>
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="w-full sm:w-[300px]">
             <Skeleton.Input active size="large" style={{ width: 180 }} />
             <div className="mt-2">
               <Skeleton.Input active size="small" style={{ width: 250 }} />
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:gap-3">
             <Skeleton.Button active size="large" />
             <Skeleton.Button active size="large" />
           </div>
@@ -269,9 +269,9 @@ export default function Profile() {
         },
       }}
     >
-      <div className={darkMode ? "p-6 bg-[#111827] min-h-screen" : "p-6"}>
+      <div className={darkMode ? "min-h-screen bg-[#111827] p-4 sm:p-6" : "p-4 sm:p-6"}>
         {/* Header */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1
               className={
@@ -293,11 +293,11 @@ export default function Profile() {
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-3">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:gap-3">
             <Button
               icon={<LockKeyhole size={16} />}
               onClick={() => setPasswordModal(true)}
-              className="h-10"
+              className="h-10 w-full sm:w-auto"
             >
               Change Password
             </Button>
@@ -306,7 +306,7 @@ export default function Profile() {
               type="primary"
               icon={<Pencil size={16} />}
               onClick={openEditModal}
-              className="h-10"
+              className="h-10 w-full sm:w-auto"
               style={{
                 backgroundColor: "#4EA674",
                 borderColor: "#4EA674",
@@ -329,7 +329,7 @@ export default function Profile() {
           {/* Cover */}
           <div className="h-[140px] bg-gradient-to-r from-[#1F2937] to-[#4B5563]" />
 
-          <div className="px-6 pb-6">
+          <div className="px-4 pb-5 sm:px-6 sm:pb-6">
             {/* Avatar + Status */}
             <div className="flex items-end justify-between -mt-12">
               <div
@@ -662,6 +662,8 @@ export default function Profile() {
           }}
           footer={null}
           centered
+          width="min(520px, calc(100vw - 24px))"
+          styles={{ body: { maxHeight: "calc(100dvh - 180px)", overflowY: "auto" } }}
         >
           <Form form={editForm} layout="vertical" onFinish={handleEdit}>
             <Form.Item
@@ -734,6 +736,8 @@ export default function Profile() {
           }}
           footer={null}
           centered
+          width="min(520px, calc(100vw - 24px))"
+          styles={{ body: { maxHeight: "calc(100dvh - 180px)", overflowY: "auto" } }}
         >
           <Form
             form={passwordForm}
@@ -794,7 +798,7 @@ export default function Profile() {
               <Input.Password placeholder="Confirm Password" size="large" />
             </Form.Item>
 
-            <div className="flex justify-end gap-3 mt-6">
+            <div className="mt-6 flex flex-col-reverse justify-end gap-3 sm:flex-row">
               <Button
                 onClick={() => {
                   setPasswordModal(false);

@@ -11,6 +11,7 @@ import {
 import dayjs from "dayjs";
 import { useTheme } from "../../../context/modContext";
 import BrandService from "../hook/Brands";
+import { resolveImageUrl } from "../../service/UploadService";
 
 interface BrandDetailsProps {
   brandId: string | undefined;
@@ -43,11 +44,15 @@ const BrandDetails = ({ brandId, open, onClose }: BrandDetailsProps) => {
       open={open}
       onCancel={onClose}
       footer={null}
-      width={580}
+      width="min(580px, calc(100vw - 24px))"
       centered
       destroyOnClose
       styles={{
-        body: { padding: 0 },
+        body: {
+          padding: 0,
+          maxHeight: "calc(100dvh - 24px)",
+          overflowY: "auto",
+        },
       }}
     >
       {isPending ? (
@@ -62,7 +67,7 @@ const BrandDetails = ({ brandId, open, onClose }: BrandDetailsProps) => {
           <div className="px-6 pb-6">
             <div className="-mt-10 flex items-end justify-between gap-4">
               <Avatar
-                src={brand.logo}
+                src={resolveImageUrl(brand.logo)}
                 size={88}
                 shape="square"
                 className="!rounded-2xl border-4 shadow-lg"
@@ -118,7 +123,7 @@ const BrandDetails = ({ brandId, open, onClose }: BrandDetailsProps) => {
               </p>
             </div>
 
-            <div className="mt-3 grid grid-cols-3 gap-3">
+            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
               <div className="rounded-xl p-3" style={boxStyle}>
                 <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-500">
                   <ShoppingOutlined />
@@ -188,7 +193,7 @@ const BrandDetails = ({ brandId, open, onClose }: BrandDetailsProps) => {
               </span>
               <Typography.Text
                 copyable
-                className={`!text-xs ${textMuted}`}
+                className={`!block !min-w-0 !break-all !text-xs ${textMuted}`}
                 style={{ color: darkMode ? "#9CA3AF" : "#64748B" }}
               >
                 {brand.id}

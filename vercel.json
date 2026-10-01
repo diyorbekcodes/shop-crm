@@ -1,3 +1,7 @@
 {
+  "framework": "vite",
+  "installCommand": "npm ci --os=linux --cpu=x64",
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "dist",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

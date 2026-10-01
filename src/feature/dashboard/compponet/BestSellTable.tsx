@@ -360,12 +360,15 @@ const BestSellTable = () => {
         <div
           className="
             flex
-            items-center
+            flex-col
+            items-stretch
             justify-between
-            gap-4
+            gap-3
             border-b
             border-[#E5E7EB]
             p-4
+            sm:flex-row
+            sm:items-center
             dark:border-[#374151]
           "
         >
@@ -415,7 +418,7 @@ const BestSellTable = () => {
 
           {/* ACTIONS */}
 
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 items-center gap-2">
             {/* SEARCH */}
 
             <div className="relative">
@@ -428,7 +431,8 @@ const BestSellTable = () => {
                 }}
                 onSearch={onSearch}
                 className="
-                  w-[230px]
+                  w-full
+                  sm:w-[230px]
                   !rounded-[9px]
                   !outline-none
                   !shadow-none

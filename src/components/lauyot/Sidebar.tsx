@@ -11,56 +11,297 @@ import {
   Star,
   Users,
 } from "lucide-react";
+import { Popover } from "antd";
+import { NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import logo from "../../assets/img/logo1.png";
 import avatar from "../../assets/img/avatar.png";
-import { NavLink } from "react-router-dom";
-import { useState } from "react";
 import useMe from "../../feature/service/hooks/useMe";
 
-export default function Sidebar() {
+interface SidebarProps {
+  mobileOpen: boolean;
+  onMobileClose: () => void;
+}
+
+export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const [sidebar, setSidebar] = useState(false);
 
   const { data, isLoading } = useMe();
   const adminData = data?.data;
 
-  return (
-    <div
-      className={`
-    ${sidebar ? "w-[80px] min-w-[80px]" : "w-[260px] min-w-[260px]"} 
-    shrink-0 dark:border border-r-[#2A2D35]
-    transition-[width,min-width] duration-500 ease-in-out
-    flex flex-col justify-between
-    h-screen
-    bg-white dark:bg-[#111827]
-    shadow-[0px_3px_4px_0px_#0000001F]
-  `}
-    >
-      {/* TOP */}
-      <div>
-        <div
-          className={`${
-            sidebar
-              ? "justify-center p-5"
-              : "justify-between flex items-center p-5"
-          }`}
-        >
-          <div className="flex justify-center">
-            {!sidebar && <img src={logo} alt="logo" />}
-          </div>
+  useEffect(() => {
+    if (mobileOpen) {
+      setSidebar(false);
+    }
+  }, [mobileOpen]);
 
-          <div
-            className={sidebar ? "w-full flex justify-center" : ""}
-            onClick={() => setSidebar(!sidebar)}
+  // ============================================
+  // POPOVER CONTENT
+  // ============================================
+
+  const getPopoverContent = (title: string) => (
+    <div
+      className="
+        rounded-lg
+        px-3
+        py-2
+        text-sm
+        font-medium
+        whitespace-nowrap
+        text-gray-800
+        dark:text-white
+      "
+    >
+      {title}
+    </div>
+  );
+
+  // ============================================
+  // POPOVER STYLE
+  // ============================================
+
+  const popoverStyles = {
+    root: {
+      zIndex: 2147483647,
+      width: "max-content",
+      maxWidth: "calc(100vw - 16px)",
+    },
+
+    container: {
+      display: "inline-flex",
+      width: "max-content",
+      maxWidth: "calc(100vw - 16px)",
+      padding: 0,
+      borderRadius: "10px",
+      background: "rgba(31, 41, 55, 0.88)",
+      color: "#F9FAFB",
+      backdropFilter: "blur(12px)",
+      WebkitBackdropFilter: "blur(12px)",
+      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.24)",
+      border: "1px solid rgba(107, 114, 128, 0.5)",
+    },
+  };
+
+  // ============================================
+  // DARK MODE POPOVER
+  // ============================================
+
+  const darkPopoverStyles = {
+    root: {
+      zIndex: 2147483647,
+      width: "max-content",
+      maxWidth: "calc(100vw - 16px)",
+    },
+
+    container: {
+      display: "inline-flex",
+      width: "max-content",
+      maxWidth: "calc(100vw - 16px)",
+      padding: 0,
+      borderRadius: "10px",
+      background: "rgba(31, 41, 55, 0.90)",
+      color: "#F9FAFB",
+      backdropFilter: "blur(14px)",
+      WebkitBackdropFilter: "blur(14px)",
+      boxShadow: "0 12px 35px rgba(0, 0, 0, 0.45)",
+      border: "1px solid rgba(75, 85, 99, 0.7)",
+    },
+  };
+
+  // ============================================
+  // MENU ITEM
+  // ============================================
+
+  const MenuItem = ({
+    to,
+    title,
+    icon,
+  }: {
+    to: string;
+    title: string;
+    icon: React.ReactNode;
+  }) => {
+    const link = (
+      <NavLink
+        to={to}
+        onClick={onMobileClose}
+        className={({ isActive }) =>
+          `
+            group
+            relative
+            flex
+            items-center
+            gap-2
+            rounded-md
+            px-4
+            py-2.25
+            transition-all
+            duration-300
+
+            ${
+              isActive
+                ? "bg-[#4EA674] text-white"
+                : "text-[#6A717F] hover:bg-gray-100 dark:hover:bg-gray-800"
+            }
+          `
+        }
+      >
+        <span className="flex shrink-0 text-current">{icon}</span>
+
+        {!sidebar && <p className="truncate">{title}</p>}
+      </NavLink>
+    );
+
+    // ==========================================
+    // SIDEBAR YOPIQ BO'LSA POPOVER
+    // ==========================================
+
+    if (sidebar) {
+      return (
+        <Popover
+          content={getPopoverContent(title)}
+          placement="right"
+          trigger="hover"
+          arrow={false}
+          zIndex={2147483647}
+          getPopupContainer={() => document.body}
+          styles={
+            document.documentElement.classList.contains("dark")
+              ? darkPopoverStyles
+              : popoverStyles
+          }
+          mouseEnterDelay={0.05}
+          mouseLeaveDelay={0.05}
+        >
+          {link}
+        </Popover>
+      );
+    }
+
+    // ==========================================
+    // SIDEBAR OCHIQ
+    // ==========================================
+
+    return link;
+  };
+
+  // ============================================
+  // LOGOUT
+  // ============================================
+
+  const handleLogout = () => {
+    localStorage.removeItem("crmAccessToken");
+    localStorage.removeItem("crmRefreshToken");
+    localStorage.removeItem("admin");
+
+    window.location.href = "/login";
+  };
+
+  return (
+    <aside
+      onClick={(event) => {
+        if (event.target instanceof Element && event.target.closest("a")) {
+          onMobileClose();
+        }
+      }}
+      className={`
+        ${
+          sidebar
+            ? "w-[260px] min-w-[260px] lg:w-[80px] lg:min-w-[80px]"
+            : "w-[260px] min-w-[260px] lg:w-[260px] lg:min-w-[260px]"
+        }
+
+        fixed
+        inset-y-0
+        left-0
+
+        z-50
+
+        flex
+        shrink-0
+        flex-col
+        justify-between
+
+        overflow-visible
+
+        border-r
+        border-[#E5E7EB]
+
+        bg-white
+
+        shadow-[0px_3px_4px_0px_#0000001F]
+
+        transition-all
+        duration-300
+        ease-in-out
+
+        dark:border-[#2A2D35]
+        dark:bg-[#111827]
+
+        lg:sticky
+        lg:top-0
+        lg:z-auto
+        lg:h-dvh
+        lg:translate-x-0
+
+        ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
+
+        lg:transition-[width,min-width]
+      `}
+    >
+      {/* ================================================= */}
+      {/* TOP */}
+      {/* ================================================= */}
+
+      <div>
+        {/* ================================================= */}
+        {/* LOGO + COLLAPSE */}
+        {/* ================================================= */}
+
+        <div
+          className={`
+            ${
+              sidebar
+                ? "flex justify-center p-5"
+                : "flex items-center justify-between p-5"
+            }
+          `}
+        >
+          {!sidebar && (
+            <div className="flex justify-center">
+              <img src={logo} alt="logo" />
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setSidebar((prev) => !prev)}
+            className="
+              flex
+              cursor-pointer
+              items-center
+              justify-center
+              rounded-md
+              p-1
+              transition-all
+              duration-200
+              hover:bg-gray-100
+              dark:hover:bg-gray-800
+            "
           >
             {sidebar ? (
-              <SquareChevronRight className="text-[#6A717F] cursor-pointer" />
+              <SquareChevronRight size={22} className="text-[#6A717F]" />
             ) : (
-              <SquareChevronLeft className="text-[#6A717F] cursor-pointer" />
+              <SquareChevronLeft size={22} className="text-[#6A717F]" />
             )}
-          </div>
+          </button>
         </div>
 
+        {/* ================================================= */}
         {/* MENU */}
+        {/* ================================================= */}
+
         <div className="px-[14px]">
           {!sidebar && (
             <p className="sidebar-menu dark:text-gray-400">Main menu</p>
@@ -68,462 +309,248 @@ export default function Sidebar() {
 
           <div className="mt-3 flex flex-col gap-2">
             {/* DASHBOARD */}
-            <NavLink
+
+            <MenuItem
               to="dashboard"
-              className={({ isActive }) =>
-                `group relative rounded-md flex items-center gap-2 px-4 py-2.25 transition-all duration-300 
-                ${
-                  isActive
-                    ? "bg-[#4EA674] text-white"
-                    : "text-[#6A717F] hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <House color={isActive ? "white" : "#6A717F"} size={20} />
-
-                  {!sidebar && <p>Dashboard</p>}
-
-                  {sidebar && (
-                    <span
-                      className="
-                        absolute left-[68px] top-1/2 -translate-y-1/2
-                        z-50 whitespace-nowrap
-                        rounded-md px-3 py-2
-                        text-sm font-medium
-                        text-white
-                        bg-[#1F2937] dark:bg-[#374151]
-                        shadow-lg
-                        opacity-0 invisible
-                        group-hover:opacity-100
-                        group-hover:visible
-                        translate-x-[-5px]
-                        group-hover:translate-x-0
-                        transition-all duration-200
-                        pointer-events-none
-                      "
-                    >
-                      Dashboard
-                    </span>
-                  )}
-                </>
-              )}
-            </NavLink>
+              title="Dashboard"
+              icon={<House size={20} />}
+            />
 
             {/* ORDER MANAGEMENT */}
-            <NavLink
+
+            <MenuItem
               to="orderManagment"
-              className={({ isActive }) =>
-                `group relative rounded-md flex items-center gap-2 px-4 py-2.25 transition-all duration-300 
-                ${
-                  isActive
-                    ? "bg-[#4EA674] text-white"
-                    : "text-[#6A717F] hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <ShoppingCart
-                    color={isActive ? "white" : "#6A717F"}
-                    size={20}
-                  />
-
-                  {!sidebar && <p>Order Management</p>}
-
-                  {sidebar && (
-                    <span
-                      className="
-                        absolute left-[68px] top-1/2 -translate-y-1/2
-                        z-50 whitespace-nowrap
-                        rounded-md px-3 py-2
-                        text-sm font-medium
-                        text-white
-                        bg-[#1F2937] dark:bg-[#374151]
-                        shadow-lg
-                        opacity-0 invisible
-                        group-hover:opacity-100
-                        group-hover:visible
-                        translate-x-[-5px]
-                        group-hover:translate-x-0
-                        transition-all duration-200
-                        pointer-events-none
-                      "
-                    >
-                      Order Management
-                    </span>
-                  )}
-                </>
-              )}
-            </NavLink>
+              title="Order Management"
+              icon={<ShoppingCart size={20} />}
+            />
 
             {/* CUSTOMERS */}
-            <NavLink
+
+            <MenuItem
               to="customer"
-              className={({ isActive }) =>
-                `group relative rounded-md flex items-center gap-2 px-4 py-2.25 transition-all duration-300 
-                ${
-                  isActive
-                    ? "bg-[#4EA674] text-white"
-                    : "text-[#6A717F] hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <Users color={isActive ? "white" : "#6A717F"} size={20} />
-
-                  {!sidebar && <p>Customers</p>}
-
-                  {sidebar && (
-                    <span
-                      className="
-                        absolute left-[68px] top-1/2 -translate-y-1/2
-                        z-50 whitespace-nowrap
-                        rounded-md px-3 py-2
-                        text-sm font-medium
-                        text-white
-                        bg-[#1F2937] dark:bg-[#374151]
-                        shadow-lg
-                        opacity-0 invisible
-                        group-hover:opacity-100
-                        group-hover:visible
-                        translate-x-[-5px]
-                        group-hover:translate-x-0
-                        transition-all duration-200
-                        pointer-events-none
-                      "
-                    >
-                      Customers
-                    </span>
-                  )}
-                </>
-              )}
-            </NavLink>
+              title="Customers"
+              icon={<Users size={20} />}
+            />
 
             {/* CATEGORIES */}
-            <NavLink
+
+            <MenuItem
               to="categories"
-              className={({ isActive }) =>
-                `group relative rounded-md flex items-center gap-2 px-4 py-2.25 transition-all duration-300 
-                ${
-                  isActive
-                    ? "bg-[#4EA674] text-white"
-                    : "text-[#6A717F] hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <LayoutGrid
-                    color={isActive ? "white" : "#6A717F"}
-                    size={20}
-                  />
-
-                  {!sidebar && <p>Categories</p>}
-
-                  {sidebar && (
-                    <span
-                      className="
-                        absolute left-[68px] top-1/2 -translate-y-1/2
-                        z-50 whitespace-nowrap
-                        rounded-md px-3 py-2
-                        text-sm font-medium
-                        text-white
-                        bg-[#1F2937] dark:bg-[#374151]
-                        shadow-lg
-                        opacity-0 invisible
-                        group-hover:opacity-100
-                        group-hover:visible
-                        translate-x-[-5px]
-                        group-hover:translate-x-0
-                        transition-all duration-200
-                        pointer-events-none
-                      "
-                    >
-                      Categories
-                    </span>
-                  )}
-                </>
-              )}
-            </NavLink>
+              title="Categories"
+              icon={<LayoutGrid size={20} />}
+            />
 
             {/* PRODUCTS */}
-            <NavLink
+
+            <MenuItem
               to="products"
-              className={({ isActive }) =>
-                `group relative rounded-md flex items-center gap-2 px-4 py-2.25 transition-all duration-300 
-                ${
-                  isActive
-                    ? "bg-[#4EA674] text-white"
-                    : "text-[#6A717F] hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <Package color={isActive ? "white" : "#6A717F"} size={20} />
-
-                  {!sidebar && <p>Products</p>}
-
-                  {sidebar && (
-                    <span
-                      className="
-                        absolute left-[68px] top-1/2 -translate-y-1/2
-                        z-50 whitespace-nowrap
-                        rounded-md px-3 py-2
-                        text-sm font-medium
-                        text-white
-                        bg-[#1F2937] dark:bg-[#374151]
-                        shadow-lg
-                        opacity-0 invisible
-                        group-hover:opacity-100
-                        group-hover:visible
-                        translate-x-[-5px]
-                        group-hover:translate-x-0
-                        transition-all duration-200
-                        pointer-events-none
-                      "
-                    >
-                      Products
-                    </span>
-                  )}
-                </>
-              )}
-            </NavLink>
+              title="Products"
+              icon={<Package size={20} />}
+            />
 
             {/* BRANDS */}
-            <NavLink
-              to="brands"
-              className={({ isActive }) =>
-                `group relative rounded-md flex items-center gap-2 px-4 py-2.25 transition-all duration-300 
-                ${
-                  isActive
-                    ? "bg-[#4EA674] text-white"
-                    : "text-[#6A717F] hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <Star color={isActive ? "white" : "#6A717F"} size={20} />
 
-                  {!sidebar && <p>Brands</p>}
+            <MenuItem to="brands" title="Brands" icon={<Star size={20} />} />
 
-                  {sidebar && (
-                    <span
-                      className="
-                        absolute left-[68px] top-1/2 -translate-y-1/2
-                        z-50 whitespace-nowrap
-                        rounded-md px-3 py-2
-                        text-sm font-medium
-                        text-white
-                        bg-[#1F2937] dark:bg-[#374151]
-                        shadow-lg
-                        opacity-0 invisible
-                        group-hover:opacity-100
-                        group-hover:visible
-                        translate-x-[-5px]
-                        group-hover:translate-x-0
-                        transition-all duration-200
-                        pointer-events-none
-                      "
-                    >
-                      Brands
-                    </span>
-                  )}
-                </>
-              )}
-            </NavLink>
-            <NavLink
+            {/* BANNERS */}
+
+            <MenuItem
               to="banners"
-              className={({ isActive }) =>
-                `group relative rounded-md flex items-center gap-2 px-4 py-2.25 transition-all duration-300 
-                ${
-                  isActive
-                    ? "bg-[#4EA674] text-white"
-                    : "text-[#6A717F] hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <Notebook color={isActive ? "white" : "#6A717F"} size={20} />
-
-                  {!sidebar && <p>Banners</p>}
-
-                  {sidebar && (
-                    <span
-                      className="
-                        absolute left-[68px] top-1/2 -translate-y-1/2
-                        z-50 whitespace-nowrap
-                        rounded-md px-3 py-2
-                        text-sm font-medium
-                        text-white
-                        bg-[#1F2937] dark:bg-[#374151]
-                        shadow-lg
-                        opacity-0 invisible
-                        group-hover:opacity-100
-                        group-hover:visible
-                        translate-x-[-5px]
-                        group-hover:translate-x-0
-                        transition-all duration-200
-                        pointer-events-none
-                      "
-                    >
-                      Brands
-                    </span>
-                  )}
-                </>
-              )}
-            </NavLink>
+              title="Banners"
+              icon={<Notebook size={20} />}
+            />
 
             {/* ADMIN ROLE */}
-            <NavLink
+
+            <MenuItem
               to="profile"
-              className={({ isActive }) =>
-                `group relative rounded-md flex items-center gap-2 px-4 py-2.25 transition-all duration-300 
-                ${
-                  isActive
-                    ? "bg-[#4EA674] text-white"
-                    : "text-[#6A717F] hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  <CircleUserRound
-                    color={isActive ? "white" : "#6A717F"}
-                    size={20}
-                  />
-
-                  {!sidebar && <p>Admin role</p>}
-
-                  {sidebar && (
-                    <span
-                      className="
-                        absolute left-[68px] top-1/2 -translate-y-1/2
-                        z-50 whitespace-nowrap
-                        rounded-md px-3 py-2
-                        text-sm font-medium
-                        text-white
-                        bg-[#1F2937] dark:bg-[#374151]
-                        shadow-lg
-                        opacity-0 invisible
-                        group-hover:opacity-100
-                        group-hover:visible
-                        translate-x-[-5px]
-                        group-hover:translate-x-0
-                        transition-all duration-200
-                        pointer-events-none
-                      "
-                    >
-                      Admin role
-                    </span>
-                  )}
-                </>
-              )}
-            </NavLink>
+              title="Admin role"
+              icon={<CircleUserRound size={20} />}
+            />
           </div>
         </div>
       </div>
 
-      {/* USER */}
+      {/* ================================================= */}
+      {/* BOTTOM */}
+      {/* ================================================= */}
+
       <div
         className={`
-          ${sidebar ? "w-full flex justify-center" : "flex justify-between items-center"} 
-          px-[14px] mb-5 
+          mb-5
+          px-[14px]
+
+          ${
+            sidebar
+              ? "flex w-full justify-center"
+              : "flex items-center justify-between"
+          }
         `}
       >
-        <div className="flex gap-[12px] items-center">
-          {isLoading ? (
-            <div className="flex items-center gap-3">
-              {/* Avatar skeleton */}
-              <div
-                className="
-                  w-10
-                  h-10
-                  rounded-full
-                  shrink-0
-                  bg-gray-200
-                  dark:bg-[#374151]
-                  animate-pulse
-                "
-              />
+        {/* ================================================= */}
+        {/* USER — FAQAT SIDEBAR OCHIQ BO'LSA */}
+        {/* ================================================= */}
 
-              {!sidebar && (
+        {!sidebar && (
+          <div className="flex min-w-0 items-center gap-3">
+            {isLoading ? (
+              <div className="flex items-center gap-3">
+                {/* Avatar skeleton */}
+
+                <div
+                  className="
+                    h-10
+                    w-10
+                    shrink-0
+                    animate-pulse
+                    rounded-full
+                    bg-gray-200
+                    dark:bg-[#374151]
+                  "
+                />
+
                 <div className="flex flex-col gap-2">
-                  {/* Name skeleton */}
+                  {/* Name */}
+
                   <div
                     className="
-                      w-[120px]
                       h-4
+                      w-[120px]
+                      animate-pulse
                       rounded-md
                       bg-gray-200
                       dark:bg-[#374151]
-                      animate-pulse
                     "
                   />
 
-                  {/* Email skeleton */}
+                  {/* Email */}
+
                   <div
                     className="
-                      w-[150px]
                       h-3
+                      w-[150px]
+                      animate-pulse
                       rounded-md
                       bg-gray-200
                       dark:bg-[#374151]
-                      animate-pulse
                     "
                   />
                 </div>
-              )}
-            </div>
-          ) : adminData ? (
-            <NavLink to="/profile" className="flex items-center gap-3">
-              {!sidebar && (
-                <div className="w-10 h-10 shrink-0">
+              </div>
+            ) : adminData ? (
+              <NavLink
+                to="/profile"
+                onClick={onMobileClose}
+                className="
+                  flex
+                  min-w-0
+                  items-center
+                  gap-3
+                "
+              >
+                {/* Avatar */}
+
+                <div className="h-10 w-10 shrink-0">
                   <img
-                    className="rounded-full w-full h-full object-cover"
+                    className="
+                      h-full
+                      w-full
+                      rounded-full
+                      object-cover
+                    "
                     src={adminData.avatar || avatar}
                     alt="avatar"
                   />
                 </div>
-              )}
 
-              {!sidebar && (
+                {/* Name + Email */}
+
                 <div className="min-w-0">
                   <div className="flex gap-2">
-                    <p className="text-[#1F2937] dark:text-white font-medium">
+                    <p
+                      className="
+                        truncate
+                        font-medium
+                        text-[#1F2937]
+                        dark:text-white
+                      "
+                    >
                       {adminData.firstName}
                     </p>
 
-                    <p className="text-[#1F2937] dark:text-white font-medium">
+                    <p
+                      className="
+                        truncate
+                        font-medium
+                        text-[#1F2937]
+                        dark:text-white
+                      "
+                    >
                       {adminData.lastName}
                     </p>
                   </div>
 
-                  <p className="text-[#6A717F] dark:text-gray-400 text-sm truncate">
+                  <p
+                    className="
+                      max-w-[150px]
+                      truncate
+                      text-sm
+                      text-[#6A717F]
+                      dark:text-gray-400
+                    "
+                  >
                     {adminData.email}
                   </p>
                 </div>
-              )}
-            </NavLink>
-          ) : null}
-        </div>
+              </NavLink>
+            ) : null}
+          </div>
+        )}
 
-        <LogOut
-          onClick={() => {
-            localStorage.removeItem("crmAccessToken");
-            localStorage.removeItem("crmRefreshToken");
-            localStorage.removeItem("admin");
+        {/* ================================================= */}
+        {/* LOGOUT */}
+        {/* ================================================= */}
 
-            window.location.href = "/login";
-          }}
-          className="text-[#6A717F] hover:text-red-500 cursor-pointer"
-        />
+        <Popover
+          content={getPopoverContent("Logout")}
+          placement="right"
+          trigger={sidebar ? "hover" : []}
+          arrow={false}
+          zIndex={2147483647}
+          getPopupContainer={() => document.body}
+          styles={
+            document.documentElement.classList.contains("dark")
+              ? darkPopoverStyles
+              : popoverStyles
+          }
+          mouseEnterDelay={0.05}
+          mouseLeaveDelay={0.05}
+        >
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="
+              flex
+              h-9
+              w-9
+              shrink-0
+              cursor-pointer
+              items-center
+              justify-center
+              rounded-md
+              text-[#6A717F]
+              transition-all
+              duration-200
+              hover:bg-red-50
+              hover:text-red-500
+              dark:hover:bg-red-500/10
+              dark:hover:text-red-400
+            "
+          >
+            <LogOut size={20} />
+          </button>
+        </Popover>
       </div>
-    </div>
+    </aside>
   );
 }

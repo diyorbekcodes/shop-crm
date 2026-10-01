@@ -11,6 +11,7 @@ import {
   message,
   theme,
 } from "antd";
+import { isAxiosError } from "axios";
 
 import { useEffect } from "react";
 
@@ -21,8 +22,9 @@ import Brands from "../../brands/hook/Brands";
 import ProductService from "../service/ProductService";
 
 import type { UpdateProductInput } from "../types/ProductTypes";
-import { Save } from "lucide-react";
+import { Plus, Save, Trash2 } from "lucide-react";
 import type { CategoryType } from "../../categories/types/CategoriesType";
+import ImageUpload from "../../components/ImageUpload";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 
@@ -174,11 +176,13 @@ export default function EditModal({
             onClose();
           },
 
-          onError: (error: any) => {
+          onError: (error: unknown) => {
             console.error("UPDATE PRODUCT ERROR:", error);
 
             message.error(
-              error?.response?.data?.message ??
+              (isAxiosError<{ message?: string }>(error)
+                ? error.response?.data?.message
+                : undefined) ??
                 "Mahsulotni yangilashda xatolik yuz berdi",
             );
           },
@@ -308,17 +312,20 @@ export default function EditModal({
         }
         onCancel={handleClose}
         footer={null}
-        width={750}
+        width="min(750px, calc(100vw - 16px))"
         centered
         destroyOnHidden
         loading={productLoading}
+        styles={{
+          body: { maxHeight: "calc(100dvh - 180px)", overflowY: "auto" },
+        }}
       >
         <Form form={form} layout="vertical" requiredMark={false}>
           {/* ========================= */}
           {/* BASIC DETAILS */}
           {/* ========================= */}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Form.Item
               name="name"
               label="Product Name"
@@ -396,7 +403,7 @@ export default function EditModal({
             Pricing
           </p>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Form.Item
               name="price"
               label="Price"
@@ -438,7 +445,7 @@ export default function EditModal({
             Inventory
           </p>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Form.Item
               name="stock"
               label="Stock"
@@ -461,7 +468,7 @@ export default function EditModal({
           {/* CATEGORY / BRAND */}
           {/* ========================= */}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Form.Item
               name="categoryId"
               label="Category"
@@ -532,7 +539,7 @@ export default function EditModal({
               Product Status
             </p>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Form.Item
                 name="isActive"
                 valuePropName="checked"
@@ -582,19 +589,49 @@ export default function EditModal({
           </p>
 
           <Form.List name="images">
-            {(fields) => (
+            {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name }) => (
-                  <div key={key} className="grid grid-cols-[1fr_100px] gap-3">
-                    <Form.Item name={[name, "url"]}>
-                      <Input placeholder="Image URL" />
+                  <div
+                    key={key}
+                    className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_100px_auto]"
+                  >
+                    <Form.Item
+                      name={[name, "url"]}
+                      rules={[{ required: true, message: "Rasm yuklang" }]}
+                      className="min-w-0"
+                    >
+                      <ImageUpload previewAlt="Product image" />
                     </Form.Item>
 
                     <Form.Item name={[name, "sortOrder"]}>
                       <InputNumber min={0} className="w-full" />
                     </Form.Item>
+
+                    <Button
+                      danger
+                      aria-label="Remove product image"
+                      icon={<Trash2 size={16} />}
+                      onClick={() => remove(name)}
+                    />
                   </div>
                 ))}
+
+                <Button
+                  type="dashed"
+                  icon={<Plus size={16} />}
+                  onClick={() =>
+                    add({
+                      url: "",
+                      alt: form.getFieldValue("name") ?? "",
+                      isMain: fields.length === 0,
+                      sortOrder: fields.length,
+                    })
+                  }
+                  className="w-full sm:w-auto"
+                >
+                  Add image
+                </Button>
               </>
             )}
           </Form.List>

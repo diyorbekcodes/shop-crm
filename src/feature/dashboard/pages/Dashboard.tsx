@@ -402,7 +402,7 @@ console.log(kpisDatas);
             <div className="flex justify-between items-center mb-4 gap-4 flex-wrap">
               <p className="font-bold text-[18px]">Report for this week</p>
 
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                 {/* THIS WEEK / LAST WEEK */}
 
                 <ConfigProvider
@@ -498,7 +498,7 @@ console.log(kpisDatas);
 
             {/* ================= STATS ================= */}
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-4">
+            <div className="mb-4 grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
               {statsItems.map((item) => (
                 <div
                   key={item.key}
@@ -901,7 +901,7 @@ console.log(kpisDatas);
                         <div
                           className="
                     h-[5px]
-                    w-[110px]
+                    w-20
                     overflow-hidden
                     rounded-full
                     bg-[#E5E7EB]

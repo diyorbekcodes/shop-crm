@@ -113,6 +113,6 @@ export interface ProductTableRow {
   image?: string;
   date: string;
   price: number;
-  payment: PaymentMethod;
+  payment: PaymentMethod | "-";
   status: OrderStatus;
 }

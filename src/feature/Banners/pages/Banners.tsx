@@ -37,6 +37,7 @@ import DeleteBannerPopover from "../componets/DeleteBannerPopover";
 
 import type { BannerFormValues } from "../types/BannersType";
 import type { Banner } from "../types/BannersType";
+import { resolveImageUrl } from "../../service/UploadService";
 
 const Banners = () => {
   const { darkMode } = useTheme();
@@ -383,7 +384,7 @@ const Banners = () => {
            BANNER GRID
         ========================= */
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {[...banners]
             .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
             .map((banner) => (
@@ -394,7 +395,7 @@ const Banners = () => {
 
                 <div className="relative h-[210px] overflow-hidden">
                   <Image width={"100%"} height={"100%"}
-                    src={banner.image}
+                    src={resolveImageUrl(banner.image)}
                     alt={banner.title}
                     preview={{
                       mask: (
@@ -508,7 +509,7 @@ const Banners = () => {
                       INFO BOXES
                   ========================= */}
 
-                  <div className="grid grid-cols-2 gap-2 mt-4">
+                  <div className="mt-4 grid grid-cols-1 gap-2 min-[400px]:grid-cols-2">
                     <div
                       className={`
                         p-3
@@ -613,6 +614,7 @@ const Banners = () => {
                   <div
                     className={`
     flex
+    flex-wrap
     items-center
     gap-2
     mt-4

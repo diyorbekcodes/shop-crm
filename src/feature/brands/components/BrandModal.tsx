@@ -8,8 +8,9 @@ import {
   message,
   theme,
 } from "antd";
+import { isAxiosError } from "axios";
 
-import { Image as ImageIcon, Link, Save, Tag } from "lucide-react";
+import { Image as ImageIcon, Save, Tag } from "lucide-react";
 
 import { useEffect } from "react";
 
@@ -18,6 +19,7 @@ import BrandService from "../hook/Brands";
 import { useTheme } from "../../../context/modContext";
 
 import type { CreateBrandInput } from "../types/BrandTypes";
+import ImageUpload from "../../components/ImageUpload";
 
 interface BrandModalProps {
   open: boolean;
@@ -34,7 +36,7 @@ export default function BrandModal({
 }: BrandModalProps) {
   const { darkMode } = useTheme();
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<CreateBrandInput>();
 
   const { data, isPending, useCreateBrand, useUpdateBrand } = BrandService();
 
@@ -92,9 +94,11 @@ export default function BrandModal({
             onClose();
           },
 
-          onError: (error: any) => {
+          onError: (error: unknown) => {
             message.error(
-              error?.response?.data?.message || "Brand yaratishda xatolik",
+              (isAxiosError<{ message?: string }>(error)
+                ? error.response?.data?.message
+                : undefined) || "Brand yaratishda xatolik",
             );
           },
         });
@@ -117,9 +121,11 @@ export default function BrandModal({
             onClose();
           },
 
-          onError: (error: any) => {
+          onError: (error: unknown) => {
             message.error(
-              error?.response?.data?.message || "Brandni yangilashda xatolik",
+              (isAxiosError<{ message?: string }>(error)
+                ? error.response?.data?.message
+                : undefined) || "Brandni yangilashda xatolik",
             );
           },
         },
@@ -216,9 +222,12 @@ export default function BrandModal({
             </div>
           </div>
         }
-        width={550}
+        width="min(550px, calc(100vw - 24px))"
         centered
         destroyOnClose={false}
+        styles={{
+          body: { maxHeight: "calc(100dvh - 180px)", overflowY: "auto" },
+        }}
         footer={
           <div className="flex justify-end gap-3 pt-2">
             <button
@@ -325,21 +334,8 @@ export default function BrandModal({
 
             {/* LOGO */}
 
-            <Form.Item
-              name="logo"
-              label="Logo URL"
-              rules={[
-                {
-                  type: "url",
-                  message: "To'g'ri URL kiriting",
-                },
-              ]}
-            >
-              <Input
-                size="large"
-                placeholder="https://example.com/logo.png"
-                prefix={<Link size={17} />}
-              />
+            <Form.Item name="logo" label="Logo">
+              <ImageUpload buttonText="Logo yuklash" previewAlt="Brand logo" />
             </Form.Item>
 
             {/* LOGO PREVIEW */}

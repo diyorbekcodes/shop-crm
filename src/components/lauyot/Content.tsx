@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 
 export default function Content() {
   return (
-    <div className="bg-[#F9FAFB] dark:bg-[#111827] w-full h-[calc(100vh-66px)] p-4 overflow-y-auto no-scrollbar ">
+    <div className="min-h-[calc(100dvh-66px)] w-full min-w-0  overflow-x-hidden bg-[#F9FAFB] p-3 dark:bg-[#111827] sm:p-4 lg:p-6 scrollbar-hide">
       <Outlet />
     </div>
   );

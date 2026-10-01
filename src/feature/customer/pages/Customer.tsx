@@ -89,7 +89,7 @@ export default function Customer() {
       }}
     >
       <div className="min-h-screen  text-[#111827] transition-colors duration-300 dark:bg-[#111827] dark:text-white">
-        <div className="mt-8 mb-4 flex items-end justify-between">
+        <div className="mt-4 mb-4 flex flex-col items-start justify-between gap-3 sm:mt-8 sm:flex-row sm:items-end">
           <div>
             <h2
               className="
@@ -468,7 +468,7 @@ export default function Customer() {
                         Order overview
                       </p>
 
-                      <div className="mt-4 grid grid-cols-3 gap-2">
+                      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
                         {/* TOTAL */}
                         <div
                           className="

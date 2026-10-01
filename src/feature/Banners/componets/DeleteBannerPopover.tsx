@@ -31,7 +31,7 @@ export default function DeleteBannerPopover({
       rootClassName="banner-delete-popover"
       content={
         <div
-          className={`w-[280px] rounded-lg ${
+          className={`w-[min(280px,calc(100vw-32px))] rounded-lg ${
             darkMode ? "bg-[#111827]" : "bg-white"
           }`}
         >

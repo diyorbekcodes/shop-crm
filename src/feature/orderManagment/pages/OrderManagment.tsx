@@ -149,11 +149,11 @@ export default function OrderManagment() {
         </div>
 
         {/* Main Card */}
-        <div className="bg-white dark:bg-[#1F2937] p-4 shadow dark:shadow-black/20 rounded-[8px] mt-4">
+        <div className="min-w-0 rounded-[8px] bg-white p-3 shadow dark:bg-[#1F2937] dark:shadow-black/20 sm:p-4 mt-4">
           {/* Top */}
-          <div className="flex items-center justify-between gap-4 w-full">
+          <div className="flex w-full min-w-0 flex-col items-stretch gap-3 xl:flex-row xl:items-center xl:justify-between">
             {/* Status */}
-            <div className="flex items-center h-10">
+            <div className="max-w-full overflow-x-auto">
               <Segmented<string>
                 value={status}
                 options={[
@@ -182,7 +182,7 @@ export default function OrderManagment() {
                     value: "CANCELLED",
                   },
                 ]}
-                className="!h-10 !p-1.5"
+                className="!h-10 !min-w-max !p-1.5"
                 onChange={(value) => {
                   setStatus(value);
                 }}
@@ -190,11 +190,11 @@ export default function OrderManagment() {
             </div>
 
             {/* Search + Sort */}
-            <div className="flex items-center gap-2 h-10">
+            <div className="flex w-full min-w-0 items-center gap-2 sm:w-auto">
               <Search
                 placeholder="Search..."
                 allowClear
-                className="w-[250px] h-10"
+                className="w-full min-w-0 h-10 sm:w-[250px]"
                 value={searchValue}
                 onChange={(e) => {
                   setSearchValue(e.target.value);

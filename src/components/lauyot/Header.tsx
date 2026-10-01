@@ -1,10 +1,15 @@
 import { ConfigProvider, Input } from "antd";
-import { BellDot, Moon, Search as SearchIcon, Sun } from "lucide-react";
+import { BellDot, Menu, Moon, Search as SearchIcon, Sun } from "lucide-react";
 import avatar from "../../assets/img/avatar.png";
 import { useTheme } from "../../context/modContext";
 import { NavLink, useLocation } from "react-router-dom";
 import useMe from "../../feature/service/hooks/useMe";
-export default function Header() {
+
+interface HeaderProps {
+  onMenuClick: () => void;
+}
+
+export default function Header({ onMenuClick }: HeaderProps) {
   const { darkMode, toggleDarkMode } = useTheme();
   const location = useLocation();
   const { data } = useMe();
@@ -24,19 +29,27 @@ export default function Header() {
     <div
       className={
         darkMode
-          ? "flex h-[66px] w-full items-center border border-l-0 border-b-[#2A2D35] justify-between pl-[24px] pr-[44px] bg-[#111827]"
-          : "flex h-[66px] w-full items-center justify-between pl-[24px] pr-[44px] bg-white"
+          ? "flex h-[66px] w-full min-w-0 items-center justify-between border border-l-0 border-b-[#2A2D35] bg-[#111827] px-3 sm:px-5 lg:pl-6 lg:pr-11"
+          : "flex h-[66px] w-full min-w-0 items-center justify-between bg-white px-3 sm:px-5 lg:pl-6 lg:pr-11"
       }
     >
-      <div>
-        <p className={darkMode ? "text-white" : "text-[#023337]"}>
+      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+        <button
+          type="button"
+          aria-label="Open navigation menu"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 lg:hidden"
+          onClick={onMenuClick}
+        >
+          <Menu size={21} />
+        </button>
+        <p className={`truncate ${darkMode ? "text-white" : "text-[#023337]"}`}>
           {pageTitle}
         </p>
       </div>
 
-      <div className="flex items-center gap-5">
+      <div className="flex shrink-0 items-center gap-2 sm:gap-4 lg:gap-5">
         {/* Search */}
-        <div className="flex items-stretch h-[40px]">
+        <div className="hidden h-10 min-w-0 items-stretch sm:flex">
           <ConfigProvider
             theme={{
               token: {
@@ -59,7 +72,7 @@ export default function Header() {
             <Input
               placeholder="input search text"
               style={{
-                width: 260,
+                width: "min(260px, 32vw)",
                 borderTopRightRadius: 0,
                 borderBottomRightRadius: 0,
               }}
@@ -93,7 +106,7 @@ export default function Header() {
         </div>
 
         {/* Notification */}
-        <div className="relative cursor-pointer">
+        <div className="relative flex h-10 w-8 items-center justify-center">
           <BellDot
             size={20}
             className={darkMode ? "text-gray-300" : "text-[#6A717F]"}
@@ -101,7 +114,10 @@ export default function Header() {
         </div>
 
         {/* Dark / Light toggle */}
-        <div
+        <button
+          type="button"
+          aria-label="Toggle dark mode"
+          aria-pressed={darkMode}
           onClick={toggleDarkMode}
           className={
             darkMode
@@ -125,7 +141,7 @@ export default function Header() {
               <Sun size={14} className="text-[#4EA674]" />
             )}
           </div>
-        </div>
+        </button>
 
         {/* Avatar */}
         <NavLink to="profile">
@@ -134,8 +150,8 @@ export default function Header() {
             alt="avatar"
             className={
               darkMode
-                ? "h-[40px] w-[40px] rounded-full object-cover ring-2 ring-[#374151]"
-                : "h-[40px] w-[40px] rounded-full object-cover ring-2 ring-transparent"
+                ? "h-9 w-9 rounded-full object-cover ring-2 ring-[#374151] sm:h-10 sm:w-10"
+                : "h-9 w-9 rounded-full object-cover ring-2 ring-transparent sm:h-10 sm:w-10"
             }
           />
         </NavLink>

@@ -257,8 +257,11 @@ export default function OrderDetailsModal({ orderId, open, onClose }: Props) {
         open={open}
         onCancel={onClose}
         footer={null}
-        width={800}
+        width="min(800px, calc(100vw - 24px))"
         centered
+        styles={{
+          body: { maxHeight: "calc(100dvh - 180px)", overflowY: "auto" },
+        }}
       >
         {isPending || !order ? (
           <div className="flex justify-center py-10">
@@ -268,7 +271,7 @@ export default function OrderDetailsModal({ orderId, open, onClose }: Props) {
           <div className="flex flex-col gap-6">
             {/* BUYURTMA MA'LUMOTLARI */}
 
-            <Descriptions column={2} bordered size="small">
+            <Descriptions column={{ xs: 1, sm: 2 }} bordered size="small">
               <Descriptions.Item label="Buyurtma raqami">
                 {order.orderNumber}
               </Descriptions.Item>
@@ -279,7 +282,7 @@ export default function OrderDetailsModal({ orderId, open, onClose }: Props) {
                   onChange={handleSelectStatus}
                   loading={isUpdating}
                   disabled={isUpdating}
-                  style={{ width: 160 }}
+                  style={{ width: "min(160px, 100%)" }}
                   options={statusOptions.map((opt) => ({
                     value: opt.value,
 
@@ -403,7 +406,7 @@ export default function OrderDetailsModal({ orderId, open, onClose }: Props) {
                 Mijoz
               </h3>
 
-              <Descriptions column={2} bordered size="small">
+              <Descriptions column={{ xs: 1, sm: 2 }} bordered size="small">
                 <Descriptions.Item label="Ism">
                   {order.customerSnapshot.firstName}{" "}
                   {order.customerSnapshot.lastName}
@@ -426,7 +429,7 @@ export default function OrderDetailsModal({ orderId, open, onClose }: Props) {
                 Yetkazib berish manzili
               </h3>
 
-              <Descriptions column={2} bordered size="small">
+              <Descriptions column={{ xs: 1, sm: 2 }} bordered size="small">
                 <Descriptions.Item label="Shahar">
                   {order.addressSnapshot.city}
                 </Descriptions.Item>

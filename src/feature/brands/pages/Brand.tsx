@@ -46,7 +46,7 @@ export default function Brand() {
     >
       {/* HEADER */}
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* TITLE */}
 
         <div>
@@ -73,7 +73,7 @@ export default function Brand() {
 
         {/* RIGHT */}
 
-        <div className="flex items-center gap-4">
+        <div className="flex w-full min-w-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
           {/* SEARCH */}
 
           <ConfigProvider
@@ -108,7 +108,7 @@ export default function Brand() {
             <Search
               placeholder="Search brand..."
               allowClear
-              className="w-62.5"
+              className="w-full sm:w-62.5"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               onSearch={onSearch}
@@ -120,7 +120,7 @@ export default function Brand() {
           <button
             type="button"
             onClick={handleCreate}
-            className="h-10 w-50 cursor-pointer rounded-sm bg-[#4EA674] px-3 text-sm font-semibold text-white transition hover:bg-[#3D8F60]"
+            className="min-h-10 w-full cursor-pointer rounded-sm bg-[#4EA674] px-3 text-sm font-semibold text-white transition hover:bg-[#3D8F60] sm:w-auto"
           >
             + Add Brand
           </button>

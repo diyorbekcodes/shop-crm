@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import EditModal from "./EditModal";
+import { resolveImageUrl } from "../../service/UploadService";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 interface ProductTableProps {
@@ -78,7 +79,7 @@ export default function ProductTable({ searchValue }: ProductTableProps) {
 
       render: (src: string) => (
         <Image
-          src={src}
+          src={resolveImageUrl(src)}
           alt=""
           width={48}
           height={48}

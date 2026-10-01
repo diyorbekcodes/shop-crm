@@ -14,6 +14,8 @@ import { Spin, Tag as AntTag } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductService from "../service/ProductService";
 import { useTheme } from "../../../context/modContext";
+import type { ProductImage } from "../types/ProductTypes";
+import { resolveImageUrl } from "../../service/UploadService";
 
 interface InfoItemProps {
   icon: React.ReactNode;
@@ -170,13 +172,13 @@ const ProductDetails = () => {
     );
   }
 
+  const productImages = (product.images ?? []) as ProductImage[];
   const mainImage =
-    product.images?.find((image: any) => image.isMain)?.url ||
-    product.images?.[0]?.url ||
+    productImages.find((image) => image.isMain)?.url ||
+    productImages[0]?.url ||
     "";
 
-  const extraImages =
-    product.images?.filter((image: any) => image.url !== mainImage) || [];
+  const extraImages = productImages.filter((image) => image.url !== mainImage);
 
   const formatDate = (date: string) => {
     if (!date) return "-";
@@ -196,12 +198,12 @@ const ProductDetails = () => {
     <div
       className={
         darkMode
-          ? "min-h-screen bg-[#111827] px-6 py-6 text-[#F9FAFB]"
-          : "min-h-screen bg-[#F4F7F6] px-6 py-6 text-[#263B35]"
+          ? "min-h-screen bg-[#111827] px-3 py-4 text-[#F9FAFB] sm:px-6 sm:py-6"
+          : "min-h-screen bg-[#F4F7F6] px-3 py-4 text-[#263B35] sm:px-6 sm:py-6"
       }
     >
       {/* HEADER */}
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate("/products")}
@@ -255,13 +257,13 @@ const ProductDetails = () => {
           <div
             className={
               darkMode
-                ? "flex h-[420px] items-center justify-center rounded-sm border border-[#374151] bg-[#111827] p-3"
-                : "flex h-[420px] items-center justify-center rounded-sm border border-[#E6EFEB] bg-[#F8FBFA] p-3"
+                ? "flex h-64 items-center justify-center rounded-sm border border-[#374151] bg-[#111827] p-3 sm:h-[420px]"
+                : "flex h-64 items-center justify-center rounded-sm border border-[#E6EFEB] bg-[#F8FBFA] p-3 sm:h-[420px]"
             }
           >
             {mainImage ? (
               <img
-                src={mainImage}
+                src={resolveImageUrl(mainImage)}
                 alt={product.name}
                 className="h-full w-full object-contain p-8"
               />
@@ -281,8 +283,8 @@ const ProductDetails = () => {
 
           {/* EXTRA IMAGES */}
           {extraImages.length > 0 && (
-            <div className="mt-4 grid grid-cols-4 gap-3">
-              {extraImages.map((image: any, index: number) => (
+            <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
+              {extraImages.map((image, index) => (
                 <div
                   key={index}
                   className={
@@ -292,7 +294,7 @@ const ProductDetails = () => {
                   }
                 >
                   <img
-                    src={image.url || undefined}
+                    src={resolveImageUrl(image.url) || undefined}
                     alt={image.alt || product.name}
                     className="h-full w-full object-contain"
                   />

@@ -3,6 +3,7 @@ import { Button, Image, Modal } from "antd";
 import { ExternalLink, Link2, Smartphone, X } from "lucide-react";
 
 import type { Banner } from "../types/BannersType";
+import { resolveImageUrl } from "../../service/UploadService";
 
 interface BannerDetailsModalProps {
   open: boolean;
@@ -28,7 +29,7 @@ export default function BannerDetailsModal({
       footer={null}
       centered
       className="banner-modal"
-      width={820}
+      width="min(820px, calc(100vw - 24px))"
       closeIcon={
         <div
           className={`flex h-8 w-8 items-center justify-center rounded-lg ${
@@ -48,13 +49,15 @@ export default function BannerDetailsModal({
        
         body: {
           padding: 0,
+          maxHeight: "calc(100dvh - 24px)",
+          overflowY: "auto",
         },
       }}
     >
       <div className={darkMode ? "bg-[#111827]" : "bg-white"}>
-        <div className="relative h-[300px] overflow-hidden">
+        <div className="relative h-48 overflow-hidden sm:h-[300px]">
           <Image
-            src={banner.image}
+            src={resolveImageUrl(banner.image)}
             alt={banner.title}
             width="100%"
             height="100%"
@@ -160,7 +163,7 @@ export default function BannerDetailsModal({
               </div>
 
               <Image
-                src={banner.mobileImage}
+                src={resolveImageUrl(banner.mobileImage)}
                 alt="Mobile banner"
                 width="100%"
                 height={180}

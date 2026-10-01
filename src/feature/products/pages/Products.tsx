@@ -22,7 +22,7 @@ export default function Products() {
       }
     >
       {/* HEADER */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p
           className={
             darkMode
@@ -33,7 +33,7 @@ export default function Products() {
           Product
         </p>
 
-        <div className="flex items-center gap-5">
+        <div className="flex w-full min-w-0 flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
           {/* SEARCH */}
           <ConfigProvider
             theme={{
@@ -59,7 +59,7 @@ export default function Products() {
             <Search
               placeholder="Search..."
               allowClear
-              className="w-[250px]"
+              className="w-full sm:w-[250px]"
               value={searchValue}
               onChange={(e) => {
                 setSearchValue(e.target.value);
@@ -70,7 +70,7 @@ export default function Products() {
 
           {/* ADD PRODUCT */}
           <button
-            className="w-50 cursor-pointer rounded-sm bg-[#4EA674] px-4 py-2 text-[15px] font-bold text-white transition-colors hover:bg-[#3d8f60]"
+            className="min-h-10 w-full cursor-pointer rounded-sm bg-[#4EA674] px-4 py-2 text-[15px] font-bold text-white transition-colors hover:bg-[#3d8f60] sm:w-auto"
             onClick={() => navigate("/addproducts")}
           >
             Add Products

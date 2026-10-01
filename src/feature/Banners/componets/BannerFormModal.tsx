@@ -10,6 +10,7 @@ import {
 import { X } from "lucide-react";
 
 import type { BannerFormValues } from "../types/BannersType";
+import ImageUpload from "../../components/ImageUpload";
 
 interface BannerFormModalProps {
   open: boolean;
@@ -48,7 +49,7 @@ export default function BannerFormModal({
       onCancel={onCancel}
       footer={null}
       centered
-      width={600}
+      width="min(600px, calc(100vw - 24px))"
       className="banner-modal"
       closeIcon={
         <div
@@ -69,6 +70,8 @@ export default function BannerFormModal({
        
         body: {
           padding: 0,
+          maxHeight: "calc(100dvh - 24px)",
+          overflowY: "auto",
         },
       }}
     >
@@ -132,11 +135,7 @@ export default function BannerFormModal({
 
           <Form.Item
             name="image"
-            label={
-              <span className={labelClass}>
-                Desktop Image URL
-              </span>
-            }
+            label={<span className={labelClass}>Desktop Image</span>}
             rules={[
               {
                 required: true,
@@ -144,25 +143,19 @@ export default function BannerFormModal({
               },
             ]}
           >
-            <Input
-              size="large"
-              placeholder="https://example.com/banner.jpg"
-              className={inputClass}
+            <ImageUpload
+              buttonText="Desktop rasmni yuklash"
+              previewAlt="Banner desktop image"
             />
           </Form.Item>
 
           <Form.Item
             name="mobileImage"
-            label={
-              <span className={labelClass}>
-                Mobile Image URL
-              </span>
-            }
+            label={<span className={labelClass}>Mobile Image</span>}
           >
-            <Input
-              size="large"
-              placeholder="https://example.com/mobile-banner.jpg"
-              className={inputClass}
+            <ImageUpload
+              buttonText="Mobile rasmni yuklash"
+              previewAlt="Banner mobile image"
             />
           </Form.Item>
 

@@ -20,6 +20,7 @@ import BrandService from "../hook/Brands";
 
 import type { Brand } from "../types/BrandTypes";
 import BrandDetailsModal from "./BrandDetails";
+import { resolveImageUrl } from "../../service/UploadService";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 
@@ -136,7 +137,7 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
       render: (logo: string) =>
         logo && logo !== "string" ? (
           <Image
-            src={logo}
+            src={resolveImageUrl(logo)}
             alt="Brand"
             width={65}
             height={40}

@@ -758,8 +758,9 @@ const ChartDetails = () => {
                 className="
                   mb-4
                   grid
-                  grid-cols-2
+                  grid-cols-1
                   gap-4
+                  min-[400px]:grid-cols-2
                   lg:grid-cols-4
                 "
               >

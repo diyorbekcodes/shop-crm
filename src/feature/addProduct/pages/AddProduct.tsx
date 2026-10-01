@@ -12,9 +12,9 @@ import {
   message,
   theme,
 } from "antd";
+import { isAxiosError } from "axios";
 
 import {
-  CirclePlus,
   CircleX,
   Save,
   SquarePen,
@@ -34,6 +34,7 @@ import ProductService from "../../products/service/ProductService";
 import type { CreateProductInput } from "../../products/types/ProductTypes";
 import BrandService from "../../brands/hook/Brands";
 import type { CategoryType } from "../../categories/types/CategoriesType";
+import ImageUpload from "../../components/ImageUpload";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 
@@ -71,8 +72,6 @@ interface ProductFormValues {
   stockQuantity?: number | null;
   categoryId: string;
   brandId: string;
-  startDate?: any;
-  endDate?: any;
 }
 
 export default function AddProduct() {
@@ -109,30 +108,25 @@ export default function AddProduct() {
 
   const [extraImageUrls, setExtraImageUrls] = useState<string[]>([]);
 
-  const [newImageUrl, setNewImageUrl] = useState("");
-
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
   // =========================
   // ADD IMAGE
   // =========================
 
-  const handleAddImage = () => {
-    const url = newImageUrl.trim();
+  const handleAddImage = (uploadedUrl: string) => {
+    const url = uploadedUrl.trim();
 
     if (!url) {
-      message.warning("Rasm URL manzilini kiriting");
       return;
     }
 
-    if (extraImageUrls.includes(url)) {
+    if (url === mainImageUrl || extraImageUrls.includes(url)) {
       message.warning("Bu rasm allaqachon qo'shilgan");
       return;
     }
 
     setExtraImageUrls((prev) => [...prev, url]);
-
-    setNewImageUrl("");
   };
 
   // =========================
@@ -161,8 +155,6 @@ export default function AddProduct() {
     setMainImageUrl("");
 
     setExtraImageUrls([]);
-
-    setNewImageUrl("");
 
     setSelectedColor(null);
   };
@@ -281,12 +273,13 @@ export default function AddProduct() {
           resetForm();
         },
 
-        onError: (error: any) => {
+        onError: (error: unknown) => {
           console.error("CREATE PRODUCT ERROR:", error);
 
           message.error(
-            error?.response?.data?.message ??
-              "Mahsulot yaratishda xatolik yuz berdi",
+            (isAxiosError<{ message?: string }>(error)
+              ? error.response?.data?.message
+              : undefined) ?? "Mahsulot yaratishda xatolik yuz berdi",
           );
         },
       });
@@ -416,7 +409,7 @@ export default function AddProduct() {
       >
         {/* ================= HEADER ================= */}
 
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <button
             type="button"
             onClick={() => navigate("/products")}
@@ -443,14 +436,14 @@ export default function AddProduct() {
         {/* ================= FORM ================= */}
 
         <Form form={form} layout="vertical" requiredMark={false}>
-          <div className="w-full flex gap-5 mt-9">
+          <div className="w-full flex flex-col lg:flex-row gap-5 mt-9">
             {/* ================= LEFT ================= */}
 
             <div
               className={
                 darkMode
-                  ? "w-[55%] rounded-sm bg-[#1F2937] shadow-[0px_1px_3px_0px_#00000066] p-6"
-                  : "w-[55%] rounded-sm bg-white shadow-[0px_1px_3px_0px_#00000033] p-6"
+                  ? "w-full min-w-0 lg:flex-[1.25] rounded-sm bg-[#1F2937] shadow-[0px_1px_3px_0px_#00000066] p-4 md:p-6"
+                  : "w-full min-w-0 lg:flex-[1.25] rounded-sm bg-white shadow-[0px_1px_3px_0px_#00000033] p-4 md:p-6"
               }
             >
               {/* BASIC DETAILS */}
@@ -571,7 +564,7 @@ export default function AddProduct() {
 
               {/* DISCOUNT + TAX */}
 
-              <div className="grid grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {/* DISCOUNT */}
 
                 <Form.Item
@@ -631,7 +624,7 @@ export default function AddProduct() {
                   Expiration
                 </p>
 
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <DatePicker className="w-full h-[40px]" placeholder="Start" />
 
                   <DatePicker className="w-full h-[40px]" placeholder="End" />
@@ -650,7 +643,7 @@ export default function AddProduct() {
                 Inventory
               </p>
 
-              <div className="grid grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {/* STOCK */}
 
                 <Form.Item
@@ -746,7 +739,7 @@ export default function AddProduct() {
 
               {/* BUTTONS */}
 
-              <div className="flex justify-end gap-5 items-center mt-8">
+              <div className="mt-8 flex flex-col-reverse items-stretch justify-end gap-3 sm:flex-row sm:items-center sm:gap-5">
                 <Button
                   type="default"
                   loading={isSaving}
@@ -777,8 +770,8 @@ export default function AddProduct() {
             <div
               className={
                 darkMode
-                  ? "w-[43%] p-6 rounded-sm bg-[#1F2937] shadow-[0px_1px_3px_0px_#00000066]"
-                  : "w-[43%] p-6 rounded-sm bg-white shadow-[0px_1px_3px_0px_#00000033]"
+                  ? "w-full min-w-0 lg:flex-1 p-4 md:p-6 rounded-sm bg-[#1F2937] shadow-[0px_1px_3px_0px_#00000066]"
+                  : "w-full min-w-0 lg:flex-1 p-4 md:p-6 rounded-sm bg-white shadow-[0px_1px_3px_0px_#00000033]"
               }
             >
               {/* IMAGE */}
@@ -803,33 +796,15 @@ export default function AddProduct() {
                       : "text-[#023337] text-[15px] font-bold"
                   }
                 >
-                  Asosiy rasm (URL)
+                  Asosiy rasm
                 </p>
 
-                <div
-                  className={
-                    darkMode
-                      ? "border mt-3 border-[#4B5563] rounded-lg flex flex-col p-3 gap-3"
-                      : "border mt-3 border-[#E5E7EB] rounded-lg flex flex-col p-3 gap-3"
-                  }
-                >
-                  {mainImageUrl && (
-                    <div className="flex items-center justify-center min-h-[160px]">
-                      <img
-                        src={mainImageUrl}
-                        alt="Product"
-                        className="max-h-40 max-w-full object-contain"
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                    </div>
-                  )}
-
-                  <Input
-                    placeholder="https://example.com/image.jpg"
+                <div className="mt-3 min-w-0">
+                  <ImageUpload
                     value={mainImageUrl}
-                    onChange={(e) => setMainImageUrl(e.target.value)}
+                    onChange={setMainImageUrl}
+                    buttonText="Asosiy rasmni yuklash"
+                    previewAlt="Product main image"
                   />
                 </div>
               </div>
@@ -847,7 +822,7 @@ export default function AddProduct() {
                   Qo'shimcha rasmlar
                 </p>
 
-                <div className="grid grid-cols-2 gap-5 mt-3">
+                <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {extraImageUrls.map((url, index) => (
                     <div
                       key={`${url}-${index}`}
@@ -881,32 +856,11 @@ export default function AddProduct() {
 
                   {/* ADD IMAGE */}
 
-                  <div
-                    className={
-                      darkMode
-                        ? "border border-[#4B5563] rounded-lg flex items-center justify-center w-full p-3"
-                        : "border border-[#E5E7EB] rounded-lg flex items-center justify-center w-full p-3"
-                    }
-                  >
-                    <div className="flex flex-col gap-2 w-full">
-                      <Input
-                        placeholder="Rasm URL"
-                        value={newImageUrl}
-                        onChange={(e) => setNewImageUrl(e.target.value)}
-                        onPressEnter={handleAddImage}
-                      />
-
-                      <button
-                        type="button"
-                        onClick={handleAddImage}
-                        className="flex items-center justify-center gap-1 text-[#4EA674] cursor-pointer hover:text-[#3d8f60]"
-                      >
-                        <CirclePlus size={18} />
-
-                        <span>Add Image</span>
-                      </button>
-                    </div>
-                  </div>
+                  <ImageUpload
+                    onChange={handleAddImage}
+                    buttonText="Qo'shimcha rasm qo'shish"
+                    previewAlt="Additional product image"
+                  />
                 </div>
               </div>
 

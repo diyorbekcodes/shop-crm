@@ -148,7 +148,7 @@ export default function Categories() {
 
         {/* ================= HEADER ================= */}
 
-        <div className="flex justify-between items-center mb-4">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p
             className={
               darkMode
@@ -161,7 +161,7 @@ export default function Categories() {
 
           <button
             onClick={handleCreateClick}
-            className="bg-[#4EA674] flex items-center cursor-pointer gap-2 text-[15px] font-bold text-white py-2 px-4 rounded hover:bg-[#3d8f60] transition-colors"
+            className="flex min-h-10 w-full cursor-pointer items-center justify-center gap-2 rounded bg-[#4EA674] px-4 py-2 text-[15px] font-bold text-white transition-colors hover:bg-[#3d8f60] sm:w-auto"
           >
             <CirclePlus size={20} />
             Add Category
@@ -177,13 +177,14 @@ export default function Categories() {
               : "bg-white p-4 shadow rounded-[8px] mt-4"
           }
         >
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             {/* SEGMENTED */}
 
             <Segmented<"All Categories" | "Active">
               options={["All Categories", "Active"]}
               value={selectedCategory}
               className="
+    max-w-full overflow-x-auto
     !h-10
     !p-1
     [&_.ant-segmented-group]:!h-full
@@ -199,11 +200,11 @@ export default function Categories() {
 
             {/* ACTIONS */}
 
-            <div className="flex gap-2 items-center py-2 px-4">
+            <div className="flex min-w-0 items-center gap-2 py-2 sm:px-4">
               <Search
                 placeholder="Search..."
                 allowClear
-                className="w-[250px]"
+                className="w-full min-w-0 sm:w-[250px]"
                 value={searchValue}
                 onChange={(e) => {
                   setSearchValue(e.target.value);
