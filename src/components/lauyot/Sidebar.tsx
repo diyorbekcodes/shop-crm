@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import logo from "../../assets/img/logo1.png";
 import avatar from "../../assets/img/avatar.png";
 import useMe from "../../feature/service/hooks/useMe";
+import { useTheme } from "../../context/modContext";
 
 interface SidebarProps {
   mobileOpen: boolean;
@@ -26,9 +27,10 @@ interface SidebarProps {
 
 export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const [sidebar, setSidebar] = useState(false);
-
+  const { darkMode } = useTheme();
   const { data, isLoading } = useMe();
   const adminData = data?.data;
+  console.log(adminData);
 
   useEffect(() => {
     if (mobileOpen) {
@@ -41,22 +43,10 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   // ============================================
 
   const getPopoverContent = (title: string) => (
-    <div
-      className="
-        rounded-lg
-        px-3
-        py-2
-        text-sm
-        font-medium
-        whitespace-nowrap
-        text-gray-800
-        dark:text-white
-      "
-    >
+    <div className="rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap text-gray-800 dark:text-gray-100">
       {title}
     </div>
   );
-
   // ============================================
   // POPOVER STYLE
   // ============================================
@@ -73,19 +63,21 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
       width: "max-content",
       maxWidth: "calc(100vw - 16px)",
       padding: 0,
-      borderRadius: "10px",
-      background: "rgba(31, 41, 55, 0.88)",
-      color: "#F9FAFB",
-      backdropFilter: "blur(12px)",
-      WebkitBackdropFilter: "blur(12px)",
-      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.24)",
-      border: "1px solid rgba(107, 114, 128, 0.5)",
+      borderRadius: "14px",
+
+      background: "rgba(255, 255, 255, 0.68)",
+      color: "#111827",
+
+      backdropFilter: "blur(24px) saturate(180%)",
+      WebkitBackdropFilter: "blur(24px) saturate(180%)",
+
+      border: "1px solid rgba(255, 255, 255, 0.8)",
+
+      boxShadow:
+        "0 12px 40px rgba(15, 23, 42, 0.12), " +
+        "inset 0 1px 0 rgba(255, 255, 255, 0.9)",
     },
   };
-
-  // ============================================
-  // DARK MODE POPOVER
-  // ============================================
 
   const darkPopoverStyles = {
     root: {
@@ -99,16 +91,21 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
       width: "max-content",
       maxWidth: "calc(100vw - 16px)",
       padding: 0,
-      borderRadius: "10px",
-      background: "rgba(31, 41, 55, 0.90)",
+      borderRadius: "14px",
+
+      background: "rgba(10, 15, 25, 0.90)",
       color: "#F9FAFB",
-      backdropFilter: "blur(14px)",
-      WebkitBackdropFilter: "blur(14px)",
-      boxShadow: "0 12px 35px rgba(0, 0, 0, 0.45)",
-      border: "1px solid rgba(75, 85, 99, 0.7)",
+
+      backdropFilter: "blur(24px) saturate(150%)",
+      WebkitBackdropFilter: "blur(24px) saturate(150%)",
+
+      border: "1px solid rgba(255, 255, 255, 0.08)",
+
+      boxShadow:
+        "0 14px 45px rgba(0, 0, 0, 0.55), " +
+        "inset 0 1px 0 rgba(255, 255, 255, 0.07)",
     },
   };
-
   // ============================================
   // MENU ITEM
   // ============================================
@@ -166,11 +163,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           arrow={false}
           zIndex={2147483647}
           getPopupContainer={() => document.body}
-          styles={
-            document.documentElement.classList.contains("dark")
-              ? darkPopoverStyles
-              : popoverStyles
-          }
+          styles={darkMode ? darkPopoverStyles : popoverStyles}
           mouseEnterDelay={0.05}
           mouseLeaveDelay={0.05}
         >
@@ -228,7 +221,10 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         border-r
         border-[#E5E7EB]
 
-        bg-white
+        bg-gradient-to-b
+        from-[#F2F8F3]
+        via-white
+        to-[#EAF3EC]
 
         shadow-[0px_3px_4px_0px_#0000001F]
 
@@ -237,7 +233,9 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         ease-in-out
 
         dark:border-[#2A2D35]
-        dark:bg-[#111827]
+        dark:from-[#101713]
+        dark:via-[#111827]
+        dark:to-[#152019]
 
         lg:sticky
         lg:top-0
@@ -452,12 +450,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
 
                 <div className="h-10 w-10 shrink-0">
                   <img
-                    className="
-                      h-full
-                      w-full
-                      rounded-full
-                      object-cover
-                    "
+                    className="h-full w-full rounded-full object-cover"
                     src={adminData.avatar || avatar}
                     alt="avatar"
                   />
@@ -511,45 +504,29 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         {/* LOGOUT */}
         {/* ================================================= */}
 
-        <Popover
-          content={getPopoverContent("Logout")}
-          placement="right"
-          trigger={sidebar ? "hover" : []}
-          arrow={false}
-          zIndex={2147483647}
-          getPopupContainer={() => document.body}
-          styles={
-            document.documentElement.classList.contains("dark")
-              ? darkPopoverStyles
-              : popoverStyles
-          }
-          mouseEnterDelay={0.05}
-          mouseLeaveDelay={0.05}
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="
+    flex
+    h-9
+    w-9
+    shrink-0
+    cursor-pointer
+    items-center
+    justify-center
+    rounded-md
+    text-[#6A717F]
+    transition-all
+    duration-200
+    hover:bg-red-50
+    hover:text-red-500
+    dark:hover:bg-red-500/10
+    dark:hover:text-red-400
+  "
         >
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="
-              flex
-              h-9
-              w-9
-              shrink-0
-              cursor-pointer
-              items-center
-              justify-center
-              rounded-md
-              text-[#6A717F]
-              transition-all
-              duration-200
-              hover:bg-red-50
-              hover:text-red-500
-              dark:hover:bg-red-500/10
-              dark:hover:text-red-400
-            "
-          >
-            <LogOut size={20} />
-          </button>
-        </Popover>
+          <LogOut size={20} />
+        </button>
       </div>
     </aside>
   );

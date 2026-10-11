@@ -404,12 +404,12 @@ export default function AddProduct() {
     >
       <div
         className={
-          darkMode ? "min-h-screen bg-[#111827]" : "min-h-screen bg-[#F8FAFC]"
+          darkMode ? "min-h-screen bg-[#111827] px-4" : "min-h-screen bg-[#F8FAFC] px-4"
         }
       >
         {/* ================= HEADER ================= */}
 
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3 pt-4 ">
           <button
             type="button"
             onClick={() => navigate("/products")}

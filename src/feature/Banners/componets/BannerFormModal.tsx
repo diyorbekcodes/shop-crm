@@ -144,6 +144,7 @@ export default function BannerFormModal({
             ]}
           >
             <ImageUpload
+            className={darkMode ? "!border-[#374151] !bg-[#1F2937] !text-white placeholder:!text-gray-500 hover:!border-[#4EA674] focus:!border-[#4EA674]" : ""}
               buttonText="Desktop rasmni yuklash"
               previewAlt="Banner desktop image"
             />
@@ -154,6 +155,7 @@ export default function BannerFormModal({
             label={<span className={labelClass}>Mobile Image</span>}
           >
             <ImageUpload
+              className={darkMode ? "!border-[#374151] !bg-[#1F2937] !text-white placeholder:!text-gray-500 hover:!border-[#4EA674] focus:!border-[#4EA674]" : ""}
               buttonText="Mobile rasmni yuklash"
               previewAlt="Banner mobile image"
             />

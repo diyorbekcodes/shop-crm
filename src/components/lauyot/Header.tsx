@@ -29,8 +29,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
     <div
       className={
         darkMode
-          ? "flex h-[66px] w-full min-w-0 items-center justify-between border border-l-0 border-b-[#2A2D35] bg-[#111827] px-3 sm:px-5 lg:pl-6 lg:pr-11"
-          : "flex h-[66px] w-full min-w-0 items-center justify-between bg-white px-3 sm:px-5 lg:pl-6 lg:pr-11"
+          ? "flex h-[66px] w-full min-w-0 items-center justify-between border border-l-0 border-b-[#2A2D35] bg-gradient-to-r from-[#101713] via-[#111827] to-[#152019] px-3 sm:px-5 lg:pl-6 lg:pr-11"
+          : "relative z-10 flex h-[66px] w-full min-w-0 items-center justify-between border-b border-[#DCE8DF] bg-gradient-to-r from-[#E8F3EB] via-[#F8FCF9] to-[#E5F0E8] shadow-[0_2px_12px_rgba(31,41,55,0.06)] px-3 sm:px-5 lg:pl-6 lg:pr-11"
       }
     >
       <div className="flex min-w-0 items-center gap-2 sm:gap-3">
@@ -121,8 +121,8 @@ export default function Header({ onMenuClick }: HeaderProps) {
           onClick={toggleDarkMode}
           className={
             darkMode
-              ? "relative w-[56px] h-[30px] rounded-full p-1 cursor-pointer transition-colors duration-300 bg-[#374151]"
-              : "relative w-[56px] h-[30px] rounded-full p-1 cursor-pointer transition-colors duration-300 bg-[#EAF8E7]"
+              ? "relative w-[56px] h-[30px] rounded-full p-1 cursor-pointer transition-all duration-300 bg-[#374151] border border-[#4B5563]"
+              : "relative w-[56px] h-[30px] rounded-full p-1 cursor-pointer transition-all duration-300 bg-white/40 backdrop-blur-xl border border-white/70 shadow-[0_4px_12px_rgba(78,166,116,0.15)]"
           }
         >
           <div

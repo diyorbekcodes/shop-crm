@@ -134,7 +134,7 @@ const SignUpChart = ({ data }: SignUpChartProps) => {
         options={options}
         series={series}
         type="line"
-        height="100%"
+        height={380}
         width="100%"
       />
     </div>

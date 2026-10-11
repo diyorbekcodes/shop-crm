@@ -142,9 +142,9 @@ export default function OrderManagment() {
         },
       }}
     >
-      <div className="min-h-screen bg-[#F5F6F8] dark:bg-[#111827] text-[#111827] dark:text-white transition-colors duration-300">
+      <div className="min-h-screen rounded-lg bg-[#F5F6F8] dark:bg-[#111827] text-[#111827] dark:text-white transition-colors duration-300">
         {/* Header */}
-        <div className="flex justify-start items-center mb-4">
+        <div className="flex justify-start items-center mb-4 pt-4 pl-4">
           <p className="text-[20px] font-bold dark:text-white">Order List</p>
         </div>
 
@@ -182,7 +182,21 @@ export default function OrderManagment() {
                     value: "CANCELLED",
                   },
                 ]}
-                className="!h-10 !min-w-max !p-1.5"
+                className="
+  orders-segmented
+  !h-10
+  !min-w-max
+  !p-1.5
+  !rounded-xl
+  !border
+  !border-gray-200
+  dark:!border-gray-700/60
+  !bg-white/60
+  dark:!bg-[#0a0f19]/90
+  !backdrop-blur-xl
+  !shadow-[0_8px_30px_rgba(15,23,42,0.08)]
+  dark:!shadow-[0_10px_35px_rgba(0,0,0,0.45)]
+"
                 onChange={(value) => {
                   setStatus(value);
                 }}

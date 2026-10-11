@@ -358,6 +358,7 @@ export default function ProductTable({ searchValue }: ProductTableProps) {
     >
       <div className="mt-8">
         <Table<ProductTableRowData>
+          className="scrollbar-hide"
           columns={columns}
           dataSource={tableData}
           loading={isPending}

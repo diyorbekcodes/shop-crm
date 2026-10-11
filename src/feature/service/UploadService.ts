@@ -16,6 +16,7 @@ interface UploadImageResponse {
 
 const uploadFile = async (file: File): Promise<string> => {
   const formData = new FormData();
+
   formData.append("file", file);
 
   const response = await api.post<UploadImageResponse>(
@@ -34,6 +35,7 @@ const uploadFile = async (file: File): Promise<string> => {
 
 export const uploadImage = (file: File): Promise<string> => {
   const uploadKey = `${file.name}:${file.size}:${file.lastModified}`;
+
   const completedUrl = completedUploads.get(uploadKey);
 
   if (completedUrl) {
@@ -61,27 +63,30 @@ export const uploadImage = (file: File): Promise<string> => {
 };
 
 export const resolveImageUrl = (url?: string | null): string => {
-  if (!url) {
-    return "";
+  if (!url) return "";
+
+  const trimmedUrl = url.trim();
+
+  if (!trimmedUrl) return "";
+
+  if (/^https?:\/\//i.test(trimmedUrl)) {
+    return trimmedUrl;
   }
 
-  if (/^https?:\/\//i.test(url)) {
-    return url;
-  }
-
-  const uploadPath = url.replace(/^\/+/, "");
-
-  if (!uploadPath.startsWith("uploads/")) {
-    return url;
+  if (trimmedUrl.startsWith("//")) {
+    return `${window.location.protocol}${trimmedUrl}`;
   }
 
   try {
     const baseUrl = api.defaults.baseURL;
 
-    return baseUrl
-      ? new URL(uploadPath, `${new URL(baseUrl).origin}/`).toString()
-      : url;
+    if (!baseUrl) return trimmedUrl;
+
+    const origin = new URL(baseUrl).origin;
+    const normalizedPath = trimmedUrl.replace(/^\/+/, "");
+
+    return new URL(normalizedPath, `${origin}/`).toString();
   } catch {
-    return url;
+    return trimmedUrl;
   }
 };

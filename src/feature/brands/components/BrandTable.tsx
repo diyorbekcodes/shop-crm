@@ -245,7 +245,10 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
             key: "edit",
             label: (
               <div className="flex items-center gap-2">
-                <SquarePen size={14} className="text-[#4EA674]" />
+                <SquarePen
+                  size={16}
+                  className={darkMode ? "text-blue-400" : "text-blue-600"}
+                />
 
                 <span
                   className={
@@ -298,7 +301,7 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
                   "
                     />
                   ) : (
-                    <Trash2 size={14} className="text-red-500" />
+                    <Trash2 size={16} className="text-red-500" />
                   )}
 
                   <span className="text-[13px] text-red-500">
@@ -434,6 +437,7 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
       <div className="mt-7">
         <Table<BrandTableRowData>
           columns={columns}
+          className="scrollbar-hide"
           dataSource={tableData}
           loading={isPending}
           rowKey="key"
@@ -451,7 +455,7 @@ export default function BrandTable({ searchValue, onEdit }: BrandTableProps) {
       {/* BRAND DETAILS MODAL */}
 
       <BrandDetailsModal
-        brandId={selectedBrandId?? undefined}
+        brandId={selectedBrandId ?? undefined}
         open={modalOpen}
         onClose={() => {
           setModalOpen(false);

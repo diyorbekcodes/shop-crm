@@ -41,15 +41,15 @@ export default function Brand() {
   return (
     <div
       className={
-        darkMode ? "min-h-screen bg-[#111827]" : "min-h-screen bg-[#F8FAF9]"
+        darkMode ? "min-h-screen bg-[#111827] rounded-lg" : "min-h-screen bg-[#F8FAF9] rounded-lg"
       }
     >
       {/* HEADER */}
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex pt-4 pl-4  flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* TITLE */}
 
-        <div>
+        <div >
           <h1
             className={
               darkMode
@@ -120,7 +120,7 @@ export default function Brand() {
           <button
             type="button"
             onClick={handleCreate}
-            className="min-h-10 w-full cursor-pointer rounded-sm bg-[#4EA674] px-3 text-sm font-semibold text-white transition hover:bg-[#3D8F60] sm:w-auto"
+            className="min-h-10 min-w-30 cursor-pointer rounded-sm bg-[#4EA674] px-2  text-sm font-semibold text-white transition hover:bg-[#3D8F60] sm:w-auto"
           >
             + Add Brand
           </button>

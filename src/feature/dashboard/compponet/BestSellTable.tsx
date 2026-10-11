@@ -432,6 +432,7 @@ const BestSellTable = () => {
                 onSearch={onSearch}
                 className="
                   w-full
+                  
                   sm:w-[230px]
                   !rounded-[9px]
                   !outline-none
@@ -458,12 +459,12 @@ const BestSellTable = () => {
                 className={`
                   group
                   flex
-                  h-[38px]
+                  h-[32px]
                   items-center
                   gap-2
                   rounded-[9px]
                   border
-                  px-3.5
+                  px-3
                   text-[13px]
                   font-medium
                   transition-all
@@ -497,7 +498,7 @@ const BestSellTable = () => {
                   className="transition-transform duration-200 group-hover:rotate-12"
                 />
 
-                <span>Filter</span>
+                
 
                 {statusFilter !== "all" && (
                   <span
@@ -530,7 +531,7 @@ const BestSellTable = () => {
         <div className=" overflow-hidden">
           <Table<Product>
             loading={isPending}
-            className="custom-table"
+            className="custom-table scrollbar-hide"
             columns={columns}
             dataSource={filterSearch}
             pagination={false}

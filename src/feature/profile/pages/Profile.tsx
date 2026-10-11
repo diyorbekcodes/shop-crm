@@ -23,6 +23,7 @@ import { useState } from "react";
 
 import ProfileService from "../service/ProfileService";
 import { useTheme } from "../../../context/modContext";
+import ImageUpload from "../../components/ImageUpload";
 
 export default function Profile() {
   const {
@@ -696,20 +697,10 @@ export default function Profile() {
               <Input placeholder="+998..." />
             </Form.Item>
 
-            <Form.Item
-              name="avatar"
-              label="Avatar"
-              rules={[
-                {
-                  type: "url",
-                  message: "To'g'ri URL kiriting",
-                },
-              ]}
-            >
-              <Input
-                size="large"
-                placeholder="https://example.com/avatar.jpg"
-                prefix="🖼️"
+            <Form.Item name="avatar" label="Avatar">
+              <ImageUpload
+                buttonText="Avatar yuklash"
+                previewAlt="Admin avatar"
               />
             </Form.Item>
 

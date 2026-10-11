@@ -1,6 +1,6 @@
 import { ConfigProvider, Dropdown, Table, theme } from "antd";
 import type { TableColumnsType } from "antd";
-import { EllipsisVertical, SquarePen,  Trash2 } from "lucide-react";
+import { EllipsisVertical, SquarePen, Trash2 } from "lucide-react";
 
 import foto from "../../../assets/img/iphone.png";
 
@@ -123,8 +123,8 @@ export default function CategoriesTable({
           {
             key: "edit",
             label: (
-              <div className="flex items-center gap-2 px-0.5 py-0.5">
-                <SquarePen size={14} className="text-[#4EA674]" />
+              <div className="flex items-center gap-2 px-2 py-0.5">
+                <SquarePen size={16}  className={darkMode ? "text-blue-400" : "text-blue-600"} />
 
                 <span
                   className={
@@ -147,8 +147,8 @@ export default function CategoriesTable({
             key: "delete",
             disabled: deleting,
             label: (
-              <div className="flex items-center gap-2 px-0.5 py-0.5">
-                <Trash2 size={14} className="text-red-500" />
+              <div className="flex items-center  gap-2 px-2 py-0.5">
+                <Trash2 size={16} className="text-red-500 " />
 
                 <span className="text-[13px] text-red-500">
                   {deleting ? "Deleting..." : "Delete"}
@@ -164,13 +164,14 @@ export default function CategoriesTable({
             onClick={(e) => e.stopPropagation()}
           >
             <Dropdown
+              className="!p-0"
               trigger={["click"]}
               placement="bottomRight"
               menu={{
                 items,
                 className: darkMode
-                  ? "dark-dropdown-menu"
-                  : "light-dropdown-menu",
+                  ? "dark-dropdown-menu "
+                  : "light-dropdown-menu ",
 
                 onClick: ({ key }) => {
                   if (key === "edit") {
@@ -264,8 +265,6 @@ export default function CategoriesTable({
             rowSelectedHoverBg: darkMode ? "#264B73" : "#BFDBFE",
           },
 
-          
-
           Pagination: {
             itemBg: darkMode ? "#374151" : "#FFFFFF",
 
@@ -284,11 +283,11 @@ export default function CategoriesTable({
       }}
     >
       <Table<CategoryType>
+        className="scrollbar-hide"
         loading={
           isLoading || createCotegories.isPending || editCategories.isPending
         }
         rowKey="id"
-       
         columns={columns}
         dataSource={filteredProducts}
         pagination={{

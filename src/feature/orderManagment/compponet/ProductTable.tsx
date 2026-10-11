@@ -308,6 +308,7 @@ console.log(orders);
     >
       <div className="mt-8">
         <Table<ProductTableRow>
+          className="scrollbar-hide"
          
           columns={columns}
           dataSource={tableData}

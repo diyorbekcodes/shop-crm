@@ -219,8 +219,8 @@ export default function Categories() {
                 }}
                 className={
                   darkMode
-                    ? "flex items-center cursor-pointer bg-[#374151] border border-[#4B5563] py-2 px-3 rounded text-gray-200 hover:bg-[#4B5563] transition-colors"
-                    : "flex items-center cursor-pointer bg-white border border-[#E5E7EB] py-2 px-3 rounded text-[#374151] hover:bg-gray-100 transition-colors"
+                    ? "flex items-center cursor-pointer bg-[#374151] border border-[#4B5563] py-2.5 px-3 rounded text-gray-200 hover:bg-[#4B5563] transition-colors"
+                    : "flex items-center cursor-pointer bg-white border border-[#E5E7EB] py-2.5 px-3 rounded text-[#374151] hover:bg-gray-100 transition-colors"
                 }
                 title={
                   sortOrder === "asc"

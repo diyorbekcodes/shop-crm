@@ -88,8 +88,8 @@ export default function Customer() {
         },
       }}
     >
-      <div className="min-h-screen  text-[#111827] transition-colors duration-300 dark:bg-[#111827] dark:text-white">
-        <div className="mt-4 mb-4 flex flex-col items-start justify-between gap-3 sm:mt-8 sm:flex-row sm:items-end">
+      <div className="min-h-screen rounded-lg  text-[#111827] transition-colors duration-300 dark:bg-[#111827] dark:text-white">
+        <div className="mt-4 mb-4 flex flex-col items-start justify-start pt-4 pl-4 gap-3 sm:mt-8 sm:flex-row sm:items-end">
           <div>
             <h2
               className="
@@ -114,19 +114,7 @@ export default function Customer() {
             </p>
           </div>
 
-          <div
-            className="
-              hidden
-              items-center
-              gap-1.5
-              text-[12px]
-              text-[#6B7280]
-              dark:text-[#9CA3AF]
-              sm:flex
-            "
-          >
-            
-          </div>
+         
         </div>
 
         {/* =========================================================

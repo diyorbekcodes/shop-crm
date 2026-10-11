@@ -70,7 +70,7 @@ export default function Products() {
 
           {/* ADD PRODUCT */}
           <button
-            className="min-h-10 w-full cursor-pointer rounded-sm bg-[#4EA674] px-4 py-2 text-[15px] font-bold text-white transition-colors hover:bg-[#3d8f60] sm:w-auto"
+            className="min-h-10 min-w-40 cursor-pointer rounded-sm bg-[#4EA674] px-2 py-2 text-[15px] font-bold text-white transition-colors hover:bg-[#3d8f60] sm:w-auto"
             onClick={() => navigate("/addproducts")}
           >
             Add Products
