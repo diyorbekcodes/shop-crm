@@ -77,9 +77,9 @@ const ChartDetails = () => {
      API
   =================================================== */
 
-  const { thisWeekLastWeek } = DashboardService();
+  const { useThisWeekLastWeek } = DashboardService();
 
-  const { data, isPending } = thisWeekLastWeek(week);
+  const { data, isPending } = useThisWeekLastWeek(week);
 
   /*
    * This week -> thisWeek
@@ -292,8 +292,6 @@ const ChartDetails = () => {
             rowSelectedHoverBg: darkMode ? "#2D3B50" : "#E3F3E9",
 
             fixedHeaderSortActiveBg: darkMode ? "#374151" : "#F3F4F6",
-
-           
 
             headerSortHoverBg: darkMode ? "#4B5563" : "#F3F4F6",
 

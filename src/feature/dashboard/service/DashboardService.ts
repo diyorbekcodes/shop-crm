@@ -1,15 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../../service/pages/api";
+
 import type {
   SalesByCountryType,
   DashboardStatsType,
- 
   WeeklyReportResponse,
   UsersPerMinuteData,
 } from "../types/ProductType";
 
 const DashboardService = () => {
- 
   const { isPending, data: kpisData } = useQuery<DashboardStatsType>({
     queryKey: ["DashboardService"],
     queryFn: async () => {
@@ -17,7 +16,8 @@ const DashboardService = () => {
       return res.data.data;
     },
   });
-  const salesByCountr = () => {
+
+  const useSalesByCountr = () => {
     return useQuery<SalesByCountryType[]>({
       queryKey: ["salesByCountr"],
       queryFn: async () => {
@@ -26,56 +26,58 @@ const DashboardService = () => {
       },
     });
   };
-  const bestSellingProduct = () => {
+
+  const useBestSellingProduct = () => {
     return useQuery({
       queryKey: ["bestSellingProduct"],
       queryFn: async () => {
         const res = await api.get("/admin/dashboard/best-selling");
-
         return res.data.data;
       },
     });
   };
-  const topProducts = () => {
+
+  const useTopProducts = () => {
     return useQuery({
       queryKey: ["topProducts"],
       queryFn: async () => {
         const res = await api.get("/admin/dashboard/top-products");
-
         return res.data.data;
       },
     });
   };
-  const realTime = () => {
+
+  const useRealTime = () => {
     return useQuery<UsersPerMinuteData>({
       queryKey: ["realTime"],
       queryFn: async () => {
         const res = await api.get("/admin/dashboard/realtime-users");
-
         return res.data.data;
       },
     });
   };
-  const thisWeekLastWeek = (week: "this" | "last") => {
+
+  const useThisWeekLastWeek = (week: "this" | "last") => {
     return useQuery<WeeklyReportResponse>({
       queryKey: ["week", week],
       queryFn: async () => {
         const res = await api.get(
           `/admin/dashboard/weekly-report?week=${week}`,
         );
-
         return res.data;
       },
     });
   };
+
   return {
     isPending,
     kpisData,
-    salesByCountr,
-    bestSellingProduct,
-    thisWeekLastWeek,
-    realTime,
-    topProducts,
+    useSalesByCountr,
+    useBestSellingProduct,
+    useThisWeekLastWeek,
+    useRealTime,
+    useTopProducts,
   };
 };
+
 export default DashboardService;

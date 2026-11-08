@@ -15,18 +15,12 @@ import linkedinIcon from "../../../assets/svg/linkedin.svg";
 import CustomerService from "../service/CustomerServise";
 import { useIsDark } from "../../hook/UseIsDark";
 
-
 export default function Customer() {
   const darkMode = useIsDark();
-
-
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [copied, setCopied] = useState(false);
-
-
-  
 
   const [selectedCustomerId, setSelectedCustomerId] = useState<
     string | undefined
@@ -113,8 +107,6 @@ export default function Customer() {
               View and manage all registered customers
             </p>
           </div>
-
-         
         </div>
 
         {/* =========================================================
@@ -145,7 +137,10 @@ export default function Customer() {
               selectedCustomerId={selectedCustomerId}
               onSelectCustomer={(id) => {
                 setSelectedCustomerId(id);
-                isCustomerLoading ? <Spin /> : setIsModalOpen(true);
+
+                if (!isCustomerLoading) {
+                  setIsModalOpen(true);
+                }
               }}
             />
           </div>

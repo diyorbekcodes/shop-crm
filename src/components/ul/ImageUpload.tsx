@@ -8,6 +8,7 @@ interface ImageUploadProps {
   onChange?: (url: string) => void;
   buttonText?: string;
   previewAlt?: string;
+  className?: string;
 }
 
 export default function ImageUpload({

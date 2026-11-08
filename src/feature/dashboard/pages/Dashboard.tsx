@@ -1,4 +1,10 @@
-import { ChevronUp, Download, EllipsisVertical, Eye, Users } from "lucide-react";
+import {
+  ChevronUp,
+  Download,
+  EllipsisVertical,
+  Eye,
+  Users,
+} from "lucide-react";
 import { useState } from "react";
 import {
   Segmented,
@@ -38,10 +44,10 @@ export default function Dashboard() {
   const {
     isPending,
     kpisData,
-    salesByCountr,
-    thisWeekLastWeek,
-    topProducts,
-    realTime,
+    useSalesByCountr,
+    useThisWeekLastWeek,
+    useTopProducts,
+    useRealTime,
   } = DashboardService();
   const reportMenuItems: MenuProps["items"] = [
     {
@@ -113,18 +119,18 @@ export default function Dashboard() {
     }
   };
   const { data: topProductsData, isPending: topProductsPanding } =
-    topProducts();
+    useTopProducts();
   console.log(topProductsData);
 
   const [week, setWeek] = useState<"this" | "last">("this");
-  const { data: salesData, isPending: salesPending } = salesByCountr();
-  const { data: weekData } = thisWeekLastWeek(week);
-  const { data: realTimeData } = realTime();
+  const { data: salesData, isPending: salesPending } = useSalesByCountr();
+  const { data: weekData } =useThisWeekLastWeek(week);
+  const { data: realTimeData } = useRealTime();
 
   const salesDatas = salesData ?? [];
 
   const kpisDatas: DashboardStatsType | undefined = kpisData;
-console.log(kpisDatas);
+  console.log(kpisDatas);
 
   const [searchValue, setSearchValue] = useState("");
   const onSearch: SearchProps["onSearch"] = (value) => {
@@ -642,8 +648,6 @@ console.log(kpisDatas);
                 </div>
 
                 {/* MORE */}
-
-                
               </div>
             </div>
 

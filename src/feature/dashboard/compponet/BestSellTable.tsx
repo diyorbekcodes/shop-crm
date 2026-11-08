@@ -14,7 +14,7 @@ import { useState } from "react";
 const BestSellTable = () => {
   const darkMode = useIsDark();
 
-  const { bestSellingProduct } = DashboardService();
+  const { useBestSellingProduct } = DashboardService();
 
   const [searchValue, setSearchValue] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -33,7 +33,7 @@ const BestSellTable = () => {
      API
   ===================================================== */
 
-  const { data: bestSell, isPending } = bestSellingProduct();
+  const { data: bestSell, isPending } = useBestSellingProduct();
 
   /* =====================================================
      FILTER
