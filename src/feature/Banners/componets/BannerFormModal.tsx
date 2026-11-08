@@ -10,7 +10,7 @@ import {
 import { X } from "lucide-react";
 
 import type { BannerFormValues } from "../types/BannersType";
-import ImageUpload from "../../components/ImageUpload";
+import ImageUpload from "../../../components/ul/ImageUpload";
 
 interface BannerFormModalProps {
   open: boolean;

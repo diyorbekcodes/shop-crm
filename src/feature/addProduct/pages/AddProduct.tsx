@@ -34,7 +34,7 @@ import ProductService from "../../products/service/ProductService";
 import type { CreateProductInput } from "../../products/types/ProductTypes";
 import BrandService from "../../brands/hook/Brands";
 import type { CategoryType } from "../../categories/types/CategoriesType";
-import ImageUpload from "../../components/ImageUpload";
+import ImageUpload from "../../../components/ul/ImageUpload";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 

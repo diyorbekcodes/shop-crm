@@ -37,7 +37,7 @@ import DeleteBannerPopover from "../componets/DeleteBannerPopover";
 
 import type { BannerFormValues } from "../types/BannersType";
 import type { Banner } from "../types/BannersType";
-import { resolveImageUrl } from "../../service/UploadService";
+import { resolveImageUrl } from "../../service/hooks/uploadService";
 
 const Banners = () => {
   const { darkMode } = useTheme();

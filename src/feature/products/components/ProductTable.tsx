@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import EditModal from "./EditModal";
-import { resolveImageUrl } from "../../service/UploadService";
+import { resolveImageUrl } from "../../service/hooks/uploadService";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 interface ProductTableProps {

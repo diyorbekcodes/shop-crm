@@ -6,7 +6,7 @@ import foto from "../../../assets/img/iphone1.png";
 
 import type { CategoryType, CreateCategoryType } from "../types/CategoriesType";
 import { useTheme } from "../../../context/modContext";
-import ImageUpload from "../../components/ImageUpload";
+import ImageUpload from "../../../components/ul/ImageUpload";
 
 interface Props {
   open: boolean;

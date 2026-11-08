@@ -16,14 +16,15 @@ import {
   Input,
   Modal,
   Skeleton,
-
   message,
 } from "antd";
 import { useState } from "react";
 
 import ProfileService from "../service/ProfileService";
 import { useTheme } from "../../../context/modContext";
-import ImageUpload from "../../components/ImageUpload";
+
+import { getImageUrl } from "../../../utils/getImageUrl";
+import ImageUpload from "../../../components/ul/ImageUpload";
 
 export default function Profile() {
   const {
@@ -34,6 +35,7 @@ export default function Profile() {
     changePassword,
     isPasswordLoading,
   } = ProfileService();
+  console.log(data);
 
   const { darkMode } = useTheme();
 
@@ -46,7 +48,11 @@ export default function Profile() {
   // Loading
   if (isLoading) {
     return (
-      <div className={darkMode ? "min-h-screen bg-[#111827] p-4 sm:p-6" : "p-4 sm:p-6"}>
+      <div
+        className={
+          darkMode ? "min-h-screen bg-[#111827] p-4 sm:p-6" : "p-4 sm:p-6"
+        }
+      >
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="w-full sm:w-[300px]">
             <Skeleton.Input active size="large" style={{ width: 180 }} />
@@ -210,7 +216,8 @@ export default function Profile() {
       },
     );
   };
-
+console.log("Original image URL:", data?.avatar);
+console.log("Final image URL:", getImageUrl(data?.avatar));
   return (
     <ConfigProvider
       theme={{
@@ -270,7 +277,11 @@ export default function Profile() {
         },
       }}
     >
-      <div className={darkMode ? "min-h-screen bg-[#111827] p-4 sm:p-6" : "p-4 sm:p-6"}>
+      <div
+        className={
+          darkMode ? "min-h-screen bg-[#111827] p-4 sm:p-6" : "p-4 sm:p-6"
+        }
+      >
         {/* Header */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -342,9 +353,19 @@ export default function Profile() {
               >
                 {data.avatar ? (
                   <img
-                    src={data.avatar}
-                    alt="Admin"
-                    className="w-full h-full rounded-full object-cover"
+                    src={getImageUrl(data.avatar)}
+                    alt={`${data.firstName} ${data.lastName}`}
+                    className="h-full w-full rounded-full object-cover"
+                    onLoad={() =>
+                      console.log("Avatar yuklandi:", getImageUrl(data.avatar))
+                    }
+                    onError={(e) => {
+                      console.error(
+                        "Avatar yuklanmadi:",
+                        getImageUrl(data.avatar),
+                      );
+                      e.currentTarget.style.display = "none";
+                    }}
                   />
                 ) : (
                   <div
@@ -664,7 +685,9 @@ export default function Profile() {
           footer={null}
           centered
           width="min(520px, calc(100vw - 24px))"
-          styles={{ body: { maxHeight: "calc(100dvh - 180px)", overflowY: "auto" } }}
+          styles={{
+            body: { maxHeight: "calc(100dvh - 180px)", overflowY: "auto" },
+          }}
         >
           <Form form={editForm} layout="vertical" onFinish={handleEdit}>
             <Form.Item
@@ -728,7 +751,9 @@ export default function Profile() {
           footer={null}
           centered
           width="min(520px, calc(100vw - 24px))"
-          styles={{ body: { maxHeight: "calc(100dvh - 180px)", overflowY: "auto" } }}
+          styles={{
+            body: { maxHeight: "calc(100dvh - 180px)", overflowY: "auto" },
+          }}
         >
           <Form
             form={passwordForm}

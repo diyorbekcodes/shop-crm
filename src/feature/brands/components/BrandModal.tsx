@@ -19,7 +19,7 @@ import BrandService from "../hook/Brands";
 import { useTheme } from "../../../context/modContext";
 
 import type { CreateBrandInput } from "../types/BrandTypes";
-import ImageUpload from "../../components/ImageUpload";
+import ImageUpload from "../../../components/ul/ImageUpload";
 
 interface BrandModalProps {
   open: boolean;

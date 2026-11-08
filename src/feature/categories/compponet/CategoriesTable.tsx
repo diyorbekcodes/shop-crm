@@ -7,7 +7,7 @@ import foto from "../../../assets/img/iphone.png";
 import type { CategoryType } from "../types/CategoriesType";
 import CategoriesService from "../service/CategoriesService";
 import { useTheme } from "../../../context/modContext";
-import { resolveImageUrl } from "../../service/UploadService";
+import { resolveImageUrl } from "../../service/hooks/uploadService";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 

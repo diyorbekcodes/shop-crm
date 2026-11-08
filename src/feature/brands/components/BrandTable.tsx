@@ -20,7 +20,7 @@ import BrandService from "../hook/Brands";
 
 import type { Brand } from "../types/BrandTypes";
 import BrandDetailsModal from "./BrandDetails";
-import { resolveImageUrl } from "../../service/UploadService";
+import { resolveImageUrl } from "../../service/hooks/uploadService";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 

@@ -15,7 +15,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import ProductService from "../service/ProductService";
 import { useTheme } from "../../../context/modContext";
 import type { ProductImage } from "../types/ProductTypes";
-import { resolveImageUrl } from "../../service/UploadService";
+import { resolveImageUrl } from "../../service/hooks/uploadService";
+
 
 interface InfoItemProps {
   icon: React.ReactNode;

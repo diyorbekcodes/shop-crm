@@ -3,7 +3,7 @@ import { Button, Image, Modal } from "antd";
 import { ExternalLink, Link2, Smartphone, X } from "lucide-react";
 
 import type { Banner } from "../types/BannersType";
-import { resolveImageUrl } from "../../service/UploadService";
+import { resolveImageUrl } from "../../service/hooks/uploadService";
 
 interface BannerDetailsModalProps {
   open: boolean;

@@ -11,7 +11,7 @@ import {
 import dayjs from "dayjs";
 import { useTheme } from "../../../context/modContext";
 import BrandService from "../hook/Brands";
-import { resolveImageUrl } from "../../service/UploadService";
+import { resolveImageUrl } from "../../service/hooks/uploadService";
 
 interface BrandDetailsProps {
   brandId: string | undefined;

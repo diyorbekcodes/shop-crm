@@ -24,7 +24,7 @@ import ProductService from "../service/ProductService";
 import type { UpdateProductInput } from "../types/ProductTypes";
 import { Plus, Save, Trash2 } from "lucide-react";
 import type { CategoryType } from "../../categories/types/CategoriesType";
-import ImageUpload from "../../components/ImageUpload";
+import ImageUpload from "../../../components/ul/ImageUpload";
 
 const { darkAlgorithm, defaultAlgorithm } = theme;
 
